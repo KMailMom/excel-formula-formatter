@@ -8,7 +8,7 @@ const devCerts = require("office-addin-dev-certs");
 const urlDev = "https://localhost:3000/";
 // Production URL. CHANGE THIS to your GitHub Pages URL before `npm run build`.
 // Must end with a trailing slash.
-const urlProd = "https://YOUR-GITHUB-USERNAME.github.io/excel-formula-formatter/";
+const urlProd = "https://KMailMom.github.io/excel-formula-formatter/";
 
 async function getHttpsOptions() {
   const httpsOptions = await devCerts.getHttpsServerOptions();
