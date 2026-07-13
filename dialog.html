@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Excel Formula Formatter</title>
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <style>
+      html, body {
+        margin: 0;
+        font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
+        color: #2b2d42;
+        background: #ffffff;
+      }
+      .wrap { padding: 16px 18px; display: flex; flex-direction: column; height: calc(100vh - 32px); box-sizing: border-box; }
+      h1 { font-size: 14px; margin: 0 0 8px; color: #2b2d42; }
+      p { font-size: 13px; line-height: 1.4; margin: 0; flex: 1 1 auto; white-space: pre-wrap; word-break: break-word; }
+      .actions { text-align: right; margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end; }
+      button {
+        font: inherit; font-size: 13px; cursor: pointer;
+        border-radius: 4px; padding: 6px 16px; border: 1px solid #d0d3e0; background: #f2f3f7; color: #2b2d42;
+      }
+      button.primary { background: #ef8354; color: #fff; border-color: #ef8354; }
+      button.primary:hover { background: #e06c3a; border-color: #e06c3a; }
+      button.secondary:hover { border-color: #ef8354; }
+      @media (prefers-color-scheme: dark) {
+        body { color: #edf2f4; background: #2b2d42; }
+        h1 { color: #edf2f4; }
+        button { background: #3a3c52; color: #edf2f4; border-color: #4a4d66; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1 id="title">Excel Formula Formatter</h1>
+      <p id="message"></p>
+      <div class="actions" id="actions"></div>
+    </div>
+    <script type="text/javascript">
+      (function () {
+        function param(name) {
+          var m = new RegExp("[?&]" + name + "=([^&]*)").exec(location.search);
+          return m ? decodeURIComponent(m[1].replace(/\+/g, " ")) : "";
+        }
+        var title = param("title");
+        var msg = param("msg");
+        var isConfirm = param("confirm") === "1";
+        if (title) document.getElementById("title").textContent = title;
+        document.getElementById("message").textContent = msg || "Done.";
+
+        function send(value) {
+          try {
+            Office.context.ui.messageParent(value);
+          } catch (e) {
+            /* parent closes on its own */
+          }
+        }
+
+        var actions = document.getElementById("actions");
+        function addButton(label, cls, value) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.textContent = label;
+          b.className = cls;
+          b.addEventListener("click", function () { send(value); });
+          actions.appendChild(b);
+          return b;
+        }
+
+        var focusBtn;
+        if (isConfirm) {
+          addButton("Cancel", "secondary", "cancel");
+          focusBtn = addButton("Continue", "primary", "ok");
+        } else {
+          focusBtn = addButton("OK", "primary", "close");
+        }
+
+        Office.onReady(function () {
+          if (focusBtn) focusBtn.focus();
+        });
+      })();
+    </script>
+  </body>
+</html>
