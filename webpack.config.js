@@ -20,8 +20,8 @@ module.exports = async (env, options) => {
   const config = {
     devtool: "source-map",
     entry: {
+      // Shared runtime: the task pane bundle also contains the command handlers.
       taskpane: "./src/taskpane/taskpane.ts",
-      commands: "./src/commands/commands.ts",
     },
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -45,16 +45,11 @@ module.exports = async (env, options) => {
         template: "./src/taskpane/taskpane.html",
         chunks: ["taskpane"],
       }),
-      new HtmlWebpackPlugin({
-        filename: "commands.html",
-        template: "./src/commands/commands.html",
-        chunks: ["commands"],
-      }),
       new CopyWebpackPlugin({
         patterns: [
-          { from: "assets", to: "assets" },
-          { from: "src/lib/excel-formula.js", to: "excel-formula.js" },
+          { from: "assets", to: "assets", globOptions: { ignore: ["**/*.svg", "**/*.mjs"] } },
           { from: "src/dialog/dialog.html", to: "dialog.html" },
+          { from: "shortcuts.json", to: "shortcuts.json" },
           {
             from: "manifest*.xml",
             to: "[name][ext]",

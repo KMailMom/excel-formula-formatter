@@ -1,7 +1,7 @@
 {
   "name": "excel-formula-formatter",
-  "version": "1.0.0",
-  "description": "Excel add-in that beautifies and minifies formulas in the selected cell, powered by excelFormulaUtilitiesJS.",
+  "version": "1.2.0",
+  "description": "Excel add-in that beautifies and minifies formulas in the selected cell, with adjustable layout density.",
   "license": "MIT",
   "private": true,
   "config": {
@@ -15,6 +15,8 @@
     "start": "office-addin-debugging start manifest.xml",
     "stop": "office-addin-debugging stop manifest.xml",
     "typecheck": "tsc --noEmit",
+    "test": "tsc --outDir .test-build --module commonjs --target es2020 --strict --skipLibCheck --types node test/formatter.test.ts && node .test-build/test/formatter.test.js",
+    "icons": "node assets/render-icons.mjs",
     "validate": "office-addin-manifest validate manifest.xml"
   },
   "devDependencies": {

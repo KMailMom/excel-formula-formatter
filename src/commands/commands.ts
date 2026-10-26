@@ -1,16 +1,18 @@
-/* global Office, Excel, console */
-import { beautifyFormula, minifyFormula, isFormula, IndentOptions } from "../lib/formatter";
-import { loadIndent } from "../lib/settings";
+/* global Office, Excel */
+/*
+ * Command handlers for the ribbon buttons and keyboard shortcuts. This module runs in
+ * the shared runtime (it is bundled into taskpane.html) and registers its actions with
+ * Office.actions.associate when imported.
+ */
+import { beautifyFormula, minifyFormulaSafe, isFormula, FormatOptions, SpacingOptions } from "../lib/formatter";
+import { loadSettings, toFormatOptions } from "../lib/settings";
+import { showDialog, DialogKind } from "../lib/dialog";
 
 // Safety cap for a single selection (e.g. guards against a whole-column select).
 const MAX_SELECTION_CELLS = 50000;
 // Per-sheet cap for the whole-workbook commands. Sheets with a larger used range
 // are skipped and reported rather than silently ignored.
 const MAX_SHEET_CELLS = 200000;
-
-Office.onReady(() => {
-  // Handlers are wired up via Office.actions.associate below.
-});
 
 type CellValue = string | number | boolean;
 
@@ -21,16 +23,19 @@ interface CellOutcome {
 }
 type CellTransform = (formula: string) => CellOutcome;
 
-function beautifyTransform(indent: IndentOptions): CellTransform {
+function beautifyTransform(options: FormatOptions): CellTransform {
   return (formula) => {
-    const r = beautifyFormula(formula, indent);
+    const r = beautifyFormula(formula, options);
     return { value: r.value, applied: r.ok, reason: r.reason };
   };
 }
 
-const minifyTransform: CellTransform = (formula) => {
-  return { value: minifyFormula(formula), applied: true };
-};
+function minifyTransform(spacing: SpacingOptions): CellTransform {
+  return (formula) => {
+    const r = minifyFormulaSafe(formula, spacing);
+    return { value: r.value, applied: r.ok, reason: r.reason };
+  };
+}
 
 // ---- shared grid logic -----------------------------------------------------
 
@@ -151,84 +156,66 @@ async function transformWorkbook(transform: CellTransform): Promise<WorkbookSumm
 
 // ---- dialogs (feedback + confirmation) -------------------------------------
 
-/**
- * Open the small dialog page. When confirm is true it shows Cancel/Continue and
- * resolves with "ok" or "cancel"; otherwise it shows OK. Resolves "" on failure
- * or if the user dismisses the dialog.
- */
-function showDialog(title: string, message: string, confirm = false): Promise<string> {
-  return new Promise((resolve) => {
-    let url: string;
-    try {
-      url =
-        new URL("dialog.html", location.href).href +
-        `?title=${encodeURIComponent(title)}&msg=${encodeURIComponent(message)}${confirm ? "&confirm=1" : ""}`;
-    } catch {
-      resolve("");
-      return;
-    }
-    Office.context.ui.displayDialogAsync(url, { height: 28, width: 34, displayInIframe: true }, (result) => {
-      if (result.status !== Office.AsyncResultStatus.Succeeded) {
-        console.warn("dialog failed:", result.error);
-        resolve("");
-        return;
-      }
-      const dialog = result.value;
-      let settled = false;
-      const finish = (value: string) => {
-        if (settled) return;
-        settled = true;
-        try {
-          dialog.close();
-        } catch {
-          /* already closed */
-        }
-        resolve(value);
-      };
-      dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
-        const message = (arg as { message?: string }).message ?? "";
-        finish(message);
-      });
-      dialog.addEventHandler(Office.EventType.DialogEventReceived, () => finish(""));
-    });
-  });
+function notify(title: string, message: string, kind: DialogKind = "info"): Promise<void> {
+  return showDialog({ title, message, kind }).then(() => undefined);
 }
 
-function notify(title: string, message: string): Promise<void> {
-  return showDialog(title, message, false).then(() => undefined);
+function confirmDialog(title: string, message: string, okLabel: string): Promise<boolean> {
+  return showDialog({ title, message, kind: "confirm", okLabel }).then((r) => r === "ok");
 }
 
-function confirmDialog(title: string, message: string): Promise<boolean> {
-  return showDialog(title, message, true).then((r) => r === "ok");
+/** Friendly text for errors; cell-edit mode gets an explanation instead of Excel's raw message. */
+function errorMessage(err: unknown): string {
+  const code = (err as { code?: string })?.code;
+  if (code === "InvalidOperationInCellEditMode") {
+    return (
+      "Excel is still editing a cell, and add-ins cannot read or change a cell while you are typing in it.\n\n" +
+      "Press Ctrl+Enter to confirm the edit (the cell stays selected), then run the command again."
+    );
+  }
+  return (err as Error)?.message ?? String(err);
 }
 
 // ---- command handlers ------------------------------------------------------
 
-async function runBeautify(event: Office.AddinCommands.Event) {
+// Ribbon buttons pass an event that must be completed; keyboard shortcuts pass none.
+type CommandEvent = Office.AddinCommands.Event | undefined;
+
+function complete(event: CommandEvent): void {
   try {
-    const s = await transformSelection(beautifyTransform(loadIndent()));
-    if (s.formulaCells === 0) {
-      await notify("Beautify Formula", "No formula found in the selected cell(s).");
-    } else if (s.changed === 0) {
-      await notify("Beautify Formula", s.firstSkipReason ? "Left unchanged: " + s.firstSkipReason + "." : "The formula is already beautified.");
-    }
-  } catch (err) {
-    await notify("Beautify Formula error", (err as Error)?.message ?? String(err));
-  } finally {
-    event.completed();
+    event?.completed();
+  } catch {
+    /* not a ribbon invocation */
   }
 }
 
-async function runMinify(event: Office.AddinCommands.Event) {
+async function runBeautify(event?: CommandEvent) {
   try {
-    const s = await transformSelection(minifyTransform);
+    const s = await transformSelection(beautifyTransform(toFormatOptions(loadSettings())));
     if (s.formulaCells === 0) {
-      await notify("Minify Formula", "No formula found in the selected cell(s).");
+      await notify("Beautify", "No formula found in the selected cell(s).");
+    } else if (s.changed === 0 && s.firstSkipReason) {
+      await notify("Beautify", "The formula was left unchanged: " + s.firstSkipReason + ".", "warning");
     }
   } catch (err) {
-    await notify("Minify Formula error", (err as Error)?.message ?? String(err));
+    await notify("Beautify failed", errorMessage(err), "error");
   } finally {
-    event.completed();
+    complete(event);
+  }
+}
+
+async function runMinify(event?: CommandEvent) {
+  try {
+    const s = await transformSelection(minifyTransform(loadSettings().spacing));
+    if (s.formulaCells === 0) {
+      await notify("Minify", "No formula found in the selected cell(s).");
+    } else if (s.changed === 0 && s.firstSkipReason) {
+      await notify("Minify", "The formula was left unchanged: " + s.firstSkipReason + ".", "warning");
+    }
+  } catch (err) {
+    await notify("Minify failed", errorMessage(err), "error");
+  } finally {
+    complete(event);
   }
 }
 
@@ -244,33 +231,42 @@ function summarizeWorkbook(verb: string, s: WorkbookSummary): string {
   return `${verb} ${cells} across ${sheets}.` + skipNote;
 }
 
-async function runBeautifyAll(event: Office.AddinCommands.Event) {
+async function runBeautifyAll(event?: CommandEvent) {
   try {
-    const go = await confirmDialog("Beautify all formulas", "This reformats every formula in all sheets of this workbook. You can undo with Ctrl+Z. Continue?");
+    const go = await confirmDialog(
+      "Beautify all formulas?",
+      "Every formula on every sheet of this workbook will be reformatted with your current settings. You can undo this with Ctrl+Z.",
+      "Beautify all"
+    );
     if (!go) return;
-    const s = await transformWorkbook(beautifyTransform(loadIndent()));
-    await notify("Beautify all formulas", summarizeWorkbook("Beautified", s));
+    const s = await transformWorkbook(beautifyTransform(toFormatOptions(loadSettings())));
+    await notify("Beautify all", summarizeWorkbook("Beautified", s), s.changed > 0 ? "success" : "info");
   } catch (err) {
-    await notify("Beautify all error", (err as Error)?.message ?? String(err));
+    await notify("Beautify all failed", errorMessage(err), "error");
   } finally {
-    event.completed();
+    complete(event);
   }
 }
 
-async function runMinifyAll(event: Office.AddinCommands.Event) {
+async function runMinifyAll(event?: CommandEvent) {
   try {
-    const go = await confirmDialog("Minify all formulas", "This collapses every formula in all sheets of this workbook to a single line. You can undo with Ctrl+Z. Continue?");
+    const go = await confirmDialog(
+      "Minify all formulas?",
+      "Every formula on every sheet of this workbook will be collapsed to a single line. You can undo this with Ctrl+Z.",
+      "Minify all"
+    );
     if (!go) return;
-    const s = await transformWorkbook(minifyTransform);
-    await notify("Minify all formulas", summarizeWorkbook("Minified", s));
+    const s = await transformWorkbook(minifyTransform(loadSettings().spacing));
+    await notify("Minify all", summarizeWorkbook("Minified", s), s.changed > 0 ? "success" : "info");
   } catch (err) {
-    await notify("Minify all error", (err as Error)?.message ?? String(err));
+    await notify("Minify all failed", errorMessage(err), "error");
   } finally {
-    event.completed();
+    complete(event);
   }
 }
 
-// FunctionName values in manifest.xml must match these action ids exactly.
+// FunctionName values in manifest.xml and action ids in shortcuts.json must match
+// these ids exactly.
 Office.actions.associate("Beautify", runBeautify);
 Office.actions.associate("Minify", runMinify);
 Office.actions.associate("BeautifyAll", runBeautifyAll);
