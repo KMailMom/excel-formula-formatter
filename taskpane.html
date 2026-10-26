@@ -1,30 +1,92 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=Edge"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Excel Formula Formatter</title><script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script><script src="excel-formula.js"></script><style>:root { --bg: #ffffff; --fg: #2b2d42; --muted: #6b7280; --line: #e5e7eb; --accent: #ef8354; --accent-d: #e06c3a; --field: #f8f9fb; }
-      @media (prefers-color-scheme: dark) {
-        :root { --bg: #1f2033; --fg: #edf2f4; --muted: #9aa0b4; --line: #3a3c52; --accent: #ef8354; --accent-d: #f2a07d; --field: #2b2d42; }
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=Edge"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Formula Formatter</title><script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script><style>:root {
+        --bg: #ffffff; --fg: #242424; --muted: #616161; --line: #e0e0e0; --card: #fafafa; --field: #ffffff; --field-line: #d1d1d1;
+        --accent: #107c41; --accent-hover: #0c6a37; --accent-soft: #e6f2eb; --warn: #bc4b09; --ok: #107c41;
+      }
+      html.dark {
+        --bg: #1f1f1f; --fg: #ffffff; --muted: #c7c7c7; --line: #3d3d3d; --card: #292929; --field: #1f1f1f; --field-line: #666666;
+        --accent: #1a8a4b; --accent-hover: #21a35a; --accent-soft: #1d3a2a; --warn: #faa06b; --ok: #54b054;
       }
       * { box-sizing: border-box; }
-      html, body { margin: 0; height: 100%; }
-      body { font-family: "Segoe UI", -apple-system, system-ui, sans-serif; color: var(--fg); background: var(--bg); font-size: 13px; }
-      .app { display: flex; flex-direction: column; height: 100vh; padding: 14px; gap: 12px; }
-      header h1 { font-size: 15px; margin: 0 0 2px; }
-      header p { font-size: 12px; margin: 0; color: var(--muted); }
-      .card { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
-      .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-      label.opt { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
-      .opt-title { font-weight: 600; margin-right: 4px; }
-      input[type="number"] { width: 48px; font: inherit; padding: 3px 6px; border: 1px solid var(--line); border-radius: 4px; background: var(--field); color: var(--fg); }
-      .preview-wrap { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 120px; }
-      textarea {
-        flex: 1 1 auto; width: 100%; resize: none; font-family: "Cascadia Code", Consolas, "Courier New", monospace;
-        font-size: 13px; line-height: 1.45; tab-size: 4; padding: 10px; border: 1px solid var(--line);
-        border-radius: 8px; background: var(--field); color: var(--fg); white-space: pre; overflow: auto;
+      html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); }
+      body { font-family: "Segoe UI", -apple-system, system-ui, sans-serif; font-size: 13px; line-height: 1.4; }
+      .app { display: flex; flex-direction: column; height: 100vh; }
+
+      /* tabs */
+      .tabs { display: flex; gap: 4px; padding: 10px 14px 0; border-bottom: 1px solid var(--line); }
+      .tab {
+        font: inherit; font-size: 13px; font-weight: 600; background: none; border: none; color: var(--muted);
+        padding: 8px 10px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
       }
+      .tab:hover { color: var(--fg); }
+      .tab[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+      .panel { flex: 1 1 auto; overflow: auto; padding: 14px; display: none; }
+      .panel.active { display: flex; flex-direction: column; gap: 14px; }
+
+      /* settings sections */
+      section h2 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 0 6px; }
+      .card { border: 1px solid var(--line); border-radius: 8px; background: var(--card); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+      .field { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+      .field-label { font-weight: 600; }
+      .sub { font-size: 12px; color: var(--muted); }
+      .note { font-size: 12px; color: var(--muted); margin: 0; }
+
+      /* density slider */
+      .density-head { display: flex; justify-content: space-between; align-items: baseline; }
+      .density-name { font-weight: 600; color: var(--accent); }
+      input[type="range"] { width: 100%; accent-color: var(--accent); margin: 2px 0 0; }
+      .ticks { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: -2px; }
+      .sample {
+        font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 11.5px; line-height: 1.45; white-space: pre;
+        overflow: auto; max-height: 220px; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--field); margin: 0;
+      }
+
+      /* controls */
+      .segmented { display: inline-flex; border: 1px solid var(--field-line); border-radius: 4px; overflow: hidden; }
+      .segmented label { cursor: pointer; }
+      .segmented input { position: absolute; opacity: 0; pointer-events: none; }
+      .segmented span { display: block; padding: 3px 12px; }
+      .segmented input:checked + span { background: var(--accent); color: #fff; }
+      .segmented input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: -2px; }
+      input[type="number"], select {
+        font: inherit; padding: 3px 6px; border: 1px solid var(--field-line); border-radius: 4px; background: var(--field); color: var(--fg); height: 28px;
+      }
+      input[type="number"] { width: 56px; }
+      select { min-width: 150px; }
+      .switch { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+      .switch input { appearance: none; -webkit-appearance: none; flex: 0 0 34px; width: 34px; height: 18px; border-radius: 9px; border: 1px solid var(--field-line); background: var(--field); position: relative; margin: 1px 0 0; cursor: pointer; }
+      .switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 10px; height: 10px; border-radius: 50%; background: var(--muted); transition: left 0.12s; }
+      .switch input:checked { background: var(--accent); border-color: var(--accent); }
+      .switch input:checked::after { left: 19px; background: #fff; }
+      .switch input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      code { font-family: "Cascadia Code", Consolas, monospace; font-size: 12px; background: var(--accent-soft); padding: 0 4px; border-radius: 3px; }
+
+      /* shortcuts */
+      .kbd-row { display: grid; grid-template-columns: 70px 1fr auto; align-items: center; gap: 8px; }
+      .kbd {
+        font: inherit; font-family: "Segoe UI", sans-serif; height: 28px; padding: 0 8px; border: 1px solid var(--field-line); border-radius: 4px;
+        background: var(--field); color: var(--fg); text-align: left; cursor: pointer; width: 100%;
+      }
+      .kbd.recording { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+      .msg-ok { color: var(--ok); }
+      .msg-warn { color: var(--warn); }
+
+      /* buttons */
+      button.btn { font: inherit; font-size: 13px; cursor: pointer; border: 1px solid var(--field-line); border-radius: 4px; padding: 0 12px; height: 30px; background: var(--field); color: var(--fg); }
+      button.btn:hover { border-color: var(--accent); }
+      button.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+      button.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+      button.btn.small { height: 28px; padding: 0 10px; font-size: 12px; }
+      button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+      /* editor */
+      #panel-editor { gap: 10px; }
+      textarea {
+        flex: 1 1 auto; min-height: 160px; width: 100%; resize: none; font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+        font-size: 12.5px; line-height: 1.45; tab-size: 4; padding: 10px; border: 1px solid var(--field-line);
+        border-radius: 6px; background: var(--field); color: var(--fg); white-space: pre; overflow: auto;
+      }
+      textarea:focus { outline: none; border-color: var(--accent); }
       .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-      button { font: inherit; font-size: 13px; cursor: pointer; border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; background: var(--field); color: var(--fg); }
-      button:hover { border-color: var(--accent); }
-      button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-      button.primary:hover { background: var(--accent-d); border-color: var(--accent-d); }
       .btns .wide { grid-column: 1 / -1; }
-      .status { font-size: 12px; color: var(--muted); min-height: 16px; }
-      .status.err { color: var(--accent-d); }
-      .hint { font-size: 11px; color: var(--muted); }</style><script defer="defer" src="taskpane.js"></script></head><body><div class="app"><header><h1>Formula Formatter</h1><p>Beautify or minify the formula in the selected cell.</p></header><div class="card"><div class="row"><span class="opt-title">Indent</span> <label class="opt"><input type="radio" name="indentKind" value="spaces" checked="checked"/> Spaces</label> <label class="opt"><input type="radio" name="indentKind" value="tab"/> Tab</label> <label class="opt">Size <input type="number" id="indentSize" min="1" max="8" value="4"/></label></div></div><div class="preview-wrap"><textarea id="preview" spellcheck="false" placeholder="Click &quot;Load from cell&quot; to pull in the selected cell's formula, or type/paste a formula here."></textarea></div><div class="status" id="status"></div><div class="btns"><button id="load" class="wide" type="button">Load from cell</button> <button id="beautify" type="button">Beautify</button> <button id="minify" type="button">Minify</button> <button id="apply" class="primary wide" type="button">Write back to cell</button></div><div class="hint">Tip: expand the formula bar (Ctrl+Shift+U) to see multi-line formulas.</div></div></body></html>
+      .status { font-size: 12px; color: var(--muted); min-height: 17px; }
+      .status.err { color: var(--warn); }</style><script defer="defer" src="taskpane.js"></script></head><body><div class="app"><div class="tabs" role="tablist"><button class="tab" role="tab" id="tab-settings" aria-controls="panel-settings" aria-selected="true">Settings</button> <button class="tab" role="tab" id="tab-editor" aria-controls="panel-editor" aria-selected="false">Editor</button></div><div class="panel active" id="panel-settings" role="tabpanel" aria-labelledby="tab-settings"><section><h2>Beautify layout</h2><div class="card"><div class="density-head"><span class="field-label">How much to split</span> <span class="density-name" id="densityName">Balanced</span></div><div><input type="range" id="density" min="0" max="4" step="1" value="2" aria-describedby="densityDesc"/><div class="ticks"><span>Expanded</span><span>Balanced</span><span>Dense</span></div></div><p class="note" id="densityDesc"></p><pre class="sample" id="sample" aria-label="Preview"></pre><div class="field"><span class="field-label">Indent with</span> <span style="display: flex; gap: 8px; align-items: center"><span class="segmented" role="radiogroup" aria-label="Indent with"><label><input type="radio" name="indentKind" value="spaces" checked="checked"/><span>Spaces</span></label> <label><input type="radio" name="indentKind" value="tab"/><span>Tab</span></label> </span><input type="number" id="indentSize" min="1" max="8" value="4" aria-label="Spaces per indent"/></span></div></div></section><section><h2>Single-line spacing</h2><div class="card"><p class="note">Applies to Minify and to the parts that Beautify keeps on one line.</p><label class="switch"><input type="checkbox" id="spaceAfterSep"/> <span>Space after each separator<br/><span class="sub"><code>IF(A1;1;0)</code> &rarr; <code>IF(A1; 1; 0)</code></span></span></label> <label class="switch"><input type="checkbox" id="spaceInParens"/> <span>Spaces inside brackets<br/><span class="sub"><code>SUM(A1:A3)</code> &rarr; <code>SUM( A1:A3 )</code></span></span></label></div></section><section><h2>Argument separator</h2><div class="card"><div class="field"><span class="field-label">Separator</span> <select id="separator"><option value="auto">Automatic</option><option value=";">Semicolon ( ; )</option><option value=",">Comma ( , )</option></select></div><p class="note" id="separatorNote">Used in the Editor tab and the preview above. Cells always use Excel's own separator.</p></div></section><section><h2>Keyboard shortcuts</h2><div class="card" id="shortcutCard"><div class="kbd-row"><span class="field-label">Beautify</span> <button class="kbd" type="button" id="kbdBeautify" data-action="Beautify">...</button> <button class="btn small" type="button" data-reset="Beautify" title="Restore default">Reset</button></div><div class="kbd-row"><span class="field-label">Minify</span> <button class="kbd" type="button" id="kbdMinify" data-action="Minify">...</button> <button class="btn small" type="button" data-reset="Minify" title="Restore default">Reset</button></div><p class="note" id="shortcutStatus">Click a shortcut, then press the new key combination. Esc cancels.</p></div></section></div><div class="panel" id="panel-editor" role="tabpanel" aria-labelledby="tab-editor"><textarea id="preview" spellcheck="false" placeholder="Click &quot;Load from cell&quot; to pull in the selected cell's formula, or type/paste a formula here."></textarea><div class="status" id="status"></div><div class="btns"><button id="load" class="btn wide" type="button">Load from cell</button> <button id="beautify" class="btn" type="button">Beautify</button> <button id="minify" class="btn" type="button">Minify</button> <button id="apply" class="btn primary wide" type="button">Write back to cell</button></div><p class="note">Tip: expand the formula bar (Ctrl+Shift+U) to see multi-line formulas.</p></div></div></body></html>

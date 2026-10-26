@@ -7,22 +7,23 @@
   xsi:type="TaskPaneApp">
 
   <Id>117076a0-2ea1-4038-be03-5425e8b2a84a</Id>
-  <Version>1.1.0.0</Version>
+  <Version>1.2.0.0</Version>
   <ProviderName>Excel Formula Formatter</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Excel Formula Formatter" />
   <Description DefaultValue="Beautify or minify the formula in the selected cell at the click of a button." />
-  <IconUrl DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/icon-32.png" />
-  <HighResolutionIconUrl DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/icon-80.png" />
-  <SupportUrl DefaultValue="https://github.com/joshbtn/excelFormulaUtilitiesJS" />
+  <IconUrl DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/logo-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/logo-64.png" />
+  <SupportUrl DefaultValue="https://github.com/KMailMom/excel-formula-formatter" />
 
   <Hosts>
     <Host Name="Workbook" />
   </Hosts>
 
   <Requirements>
-    <Sets DefaultMinVersion="1.7">
+    <Sets DefaultMinVersion="1.1">
       <Set Name="ExcelApi" MinVersion="1.7" />
+      <Set Name="SharedRuntime" MinVersion="1.1" />
     </Sets>
   </Requirements>
 
@@ -41,18 +42,23 @@
 
     <Hosts>
       <Host xsi:type="Workbook">
+        <!-- One shared runtime (taskpane.html) runs the task pane, the ribbon buttons
+             and the keyboard shortcuts. Required for keyboard shortcuts. -->
+        <Runtimes>
+          <Runtime resid="Taskpane.Url" lifetime="long" />
+        </Runtimes>
         <DesktopFormFactor>
           <!-- Function file backing the ExecuteFunction ribbon buttons. -->
-          <FunctionFile resid="Commands.Url" />
+          <FunctionFile resid="Taskpane.Url" />
 
           <ExtensionPoint xsi:type="PrimaryCommandSurface">
             <CustomTab id="EFF.Tab">
               <Group id="EFF.Group1">
                 <Label resid="Group.Label" />
                 <Icon>
-                  <bt:Image size="16" resid="Icon.16" />
-                  <bt:Image size="32" resid="Icon.32" />
-                  <bt:Image size="80" resid="Icon.80" />
+                  <bt:Image size="16" resid="Beautify.16" />
+                  <bt:Image size="32" resid="Beautify.32" />
+                  <bt:Image size="80" resid="Beautify.80" />
                 </Icon>
 
                 <!-- Beautify (one-click function command) -->
@@ -63,9 +69,14 @@
                     <Description resid="Beautify.Desc" />
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16" />
-                    <bt:Image size="32" resid="Icon.32" />
-                    <bt:Image size="80" resid="Icon.80" />
+                    <bt:Image size="16" resid="Beautify.16" />
+                    <bt:Image size="20" resid="Beautify.20" />
+                    <bt:Image size="24" resid="Beautify.24" />
+                    <bt:Image size="32" resid="Beautify.32" />
+                    <bt:Image size="40" resid="Beautify.40" />
+                    <bt:Image size="48" resid="Beautify.48" />
+                    <bt:Image size="64" resid="Beautify.64" />
+                    <bt:Image size="80" resid="Beautify.80" />
                   </Icon>
                   <Action xsi:type="ExecuteFunction">
                     <FunctionName>Beautify</FunctionName>
@@ -80,9 +91,14 @@
                     <Description resid="Minify.Desc" />
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16" />
-                    <bt:Image size="32" resid="Icon.32" />
-                    <bt:Image size="80" resid="Icon.80" />
+                    <bt:Image size="16" resid="Minify.16" />
+                    <bt:Image size="20" resid="Minify.20" />
+                    <bt:Image size="24" resid="Minify.24" />
+                    <bt:Image size="32" resid="Minify.32" />
+                    <bt:Image size="40" resid="Minify.40" />
+                    <bt:Image size="48" resid="Minify.48" />
+                    <bt:Image size="64" resid="Minify.64" />
+                    <bt:Image size="80" resid="Minify.80" />
                   </Icon>
                   <Action xsi:type="ExecuteFunction">
                     <FunctionName>Minify</FunctionName>
@@ -97,12 +113,16 @@
                     <Description resid="Options.Desc" />
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16" />
-                    <bt:Image size="32" resid="Icon.32" />
-                    <bt:Image size="80" resid="Icon.80" />
+                    <bt:Image size="16" resid="Options.16" />
+                    <bt:Image size="20" resid="Options.20" />
+                    <bt:Image size="24" resid="Options.24" />
+                    <bt:Image size="32" resid="Options.32" />
+                    <bt:Image size="40" resid="Options.40" />
+                    <bt:Image size="48" resid="Options.48" />
+                    <bt:Image size="64" resid="Options.64" />
+                    <bt:Image size="80" resid="Options.80" />
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>EFF.Taskpane</TaskpaneId>
                     <SourceLocation resid="Taskpane.Url" />
                   </Action>
                 </Control>
@@ -111,9 +131,9 @@
               <Group id="EFF.Group2">
                 <Label resid="Group2.Label" />
                 <Icon>
-                  <bt:Image size="16" resid="Icon.16" />
-                  <bt:Image size="32" resid="Icon.32" />
-                  <bt:Image size="80" resid="Icon.80" />
+                  <bt:Image size="16" resid="BeautifyAll.16" />
+                  <bt:Image size="32" resid="BeautifyAll.32" />
+                  <bt:Image size="80" resid="BeautifyAll.80" />
                 </Icon>
 
                 <!-- Beautify All (whole workbook) -->
@@ -124,9 +144,14 @@
                     <Description resid="BeautifyAll.Desc" />
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16" />
-                    <bt:Image size="32" resid="Icon.32" />
-                    <bt:Image size="80" resid="Icon.80" />
+                    <bt:Image size="16" resid="BeautifyAll.16" />
+                    <bt:Image size="20" resid="BeautifyAll.20" />
+                    <bt:Image size="24" resid="BeautifyAll.24" />
+                    <bt:Image size="32" resid="BeautifyAll.32" />
+                    <bt:Image size="40" resid="BeautifyAll.40" />
+                    <bt:Image size="48" resid="BeautifyAll.48" />
+                    <bt:Image size="64" resid="BeautifyAll.64" />
+                    <bt:Image size="80" resid="BeautifyAll.80" />
                   </Icon>
                   <Action xsi:type="ExecuteFunction">
                     <FunctionName>BeautifyAll</FunctionName>
@@ -141,9 +166,14 @@
                     <Description resid="MinifyAll.Desc" />
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16" />
-                    <bt:Image size="32" resid="Icon.32" />
-                    <bt:Image size="80" resid="Icon.80" />
+                    <bt:Image size="16" resid="MinifyAll.16" />
+                    <bt:Image size="20" resid="MinifyAll.20" />
+                    <bt:Image size="24" resid="MinifyAll.24" />
+                    <bt:Image size="32" resid="MinifyAll.32" />
+                    <bt:Image size="40" resid="MinifyAll.40" />
+                    <bt:Image size="48" resid="MinifyAll.48" />
+                    <bt:Image size="64" resid="MinifyAll.64" />
+                    <bt:Image size="80" resid="MinifyAll.80" />
                   </Icon>
                   <Action xsi:type="ExecuteFunction">
                     <FunctionName>MinifyAll</FunctionName>
@@ -159,16 +189,52 @@
 
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/icon-16.png" />
-        <bt:Image id="Icon.32" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/icon-32.png" />
-        <bt:Image id="Icon.80" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/icon-80.png" />
+        <bt:Image id="Beautify.16" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-16.png" />
+        <bt:Image id="Beautify.20" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-20.png" />
+        <bt:Image id="Beautify.24" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-24.png" />
+        <bt:Image id="Beautify.32" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-32.png" />
+        <bt:Image id="Beautify.40" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-40.png" />
+        <bt:Image id="Beautify.48" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-48.png" />
+        <bt:Image id="Beautify.64" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-64.png" />
+        <bt:Image id="Beautify.80" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-80.png" />
+        <bt:Image id="Minify.16" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-16.png" />
+        <bt:Image id="Minify.20" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-20.png" />
+        <bt:Image id="Minify.24" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-24.png" />
+        <bt:Image id="Minify.32" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-32.png" />
+        <bt:Image id="Minify.40" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-40.png" />
+        <bt:Image id="Minify.48" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-48.png" />
+        <bt:Image id="Minify.64" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-64.png" />
+        <bt:Image id="Minify.80" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-80.png" />
+        <bt:Image id="Options.16" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/options-16.png" />
+        <bt:Image id="Options.20" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/options-20.png" />
+        <bt:Image id="Options.24" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/options-24.png" />
+        <bt:Image id="Options.32" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/options-32.png" />
+        <bt:Image id="Options.40" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/options-40.png" />
+        <bt:Image id="Options.48" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/options-48.png" />
+        <bt:Image id="Options.64" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/options-64.png" />
+        <bt:Image id="Options.80" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/options-80.png" />
+        <bt:Image id="BeautifyAll.16" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-all-16.png" />
+        <bt:Image id="BeautifyAll.20" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-all-20.png" />
+        <bt:Image id="BeautifyAll.24" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-all-24.png" />
+        <bt:Image id="BeautifyAll.32" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-all-32.png" />
+        <bt:Image id="BeautifyAll.40" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-all-40.png" />
+        <bt:Image id="BeautifyAll.48" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-all-48.png" />
+        <bt:Image id="BeautifyAll.64" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-all-64.png" />
+        <bt:Image id="BeautifyAll.80" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/beautify-all-80.png" />
+        <bt:Image id="MinifyAll.16" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-all-16.png" />
+        <bt:Image id="MinifyAll.20" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-all-20.png" />
+        <bt:Image id="MinifyAll.24" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-all-24.png" />
+        <bt:Image id="MinifyAll.32" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-all-32.png" />
+        <bt:Image id="MinifyAll.40" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-all-40.png" />
+        <bt:Image id="MinifyAll.48" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-all-48.png" />
+        <bt:Image id="MinifyAll.64" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-all-64.png" />
+        <bt:Image id="MinifyAll.80" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/assets/minify-all-80.png" />
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Commands.Url" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/commands.html" />
         <bt:Url id="Taskpane.Url" DefaultValue="https://KMailMom.github.io/excel-formula-formatter/taskpane.html" />
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="Tab.Label" DefaultValue="Formula Tools" />
+        <bt:String id="Tab.Label" DefaultValue="Formula Formatter" />
         <bt:String id="Group.Label" DefaultValue="Selected cell" />
         <bt:String id="Group2.Label" DefaultValue="Whole workbook" />
         <bt:String id="Beautify.Label" DefaultValue="Beautify" />
@@ -178,12 +244,14 @@
         <bt:String id="MinifyAll.Label" DefaultValue="Minify All" />
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="Beautify.Desc" DefaultValue="Expand the formula in the selected cell(s) onto indented multiple lines." />
-        <bt:String id="Minify.Desc" DefaultValue="Collapse the formula in the selected cell(s) to a single line." />
-        <bt:String id="Options.Desc" DefaultValue="Open the Formula Formatter pane to set indentation and preview changes." />
+        <bt:String id="Beautify.Desc" DefaultValue="Spread the formula in the selected cell(s) over indented lines. Default shortcut: Ctrl+Alt+Shift+B." />
+        <bt:String id="Minify.Desc" DefaultValue="Collapse the formula in the selected cell(s) to a single line. Default shortcut: Ctrl+Alt+Shift+M." />
+        <bt:String id="Options.Desc" DefaultValue="Layout density, spacing, separator, keyboard shortcuts, and a formula editor with preview." />
         <bt:String id="BeautifyAll.Desc" DefaultValue="Beautify every formula in all sheets of this workbook (with confirmation)." />
         <bt:String id="MinifyAll.Desc" DefaultValue="Minify every formula in all sheets of this workbook (with confirmation)." />
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
+  <!-- Keyboard shortcuts (requires the shared runtime above). -->
+  <ExtendedOverrides Url="https://KMailMom.github.io/excel-formula-formatter/shortcuts.json" />
 </OfficeApp>
