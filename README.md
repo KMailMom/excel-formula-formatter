@@ -1,66 +1,44 @@
+<div align="center">
+
+<img src="assets/logo-128.png" alt="" width="88" />
+
 # Formula Formatter for Excel
 
-An Excel add-in that formats or flattens the formula in the selected cell, from the
-ribbon or with a keyboard shortcut.
+**Turn unreadable one-line formulas into clean, indented code, and back, with one click.**
 
-**[Install page](https://kmailmom.github.io/excel-formula-formatter/)** ·
-**[Use it online](https://kmailmom.github.io/excel-formula-formatter/online.html)** (no install) ·
-free and open source (MIT)
+<a href="https://kmailmom.github.io/excel-formula-formatter/"><img src="docs/images/button-install.png" alt="Install the add-in" width="282" /></a>
+&nbsp;
+<a href="https://kmailmom.github.io/excel-formula-formatter/online.html"><img src="docs/images/button-online.png" alt="Use it online" width="263" /></a>
+
+<sub>Free and open source (MIT) · Windows, Mac and Excel on the web · Your formulas never leave Excel</sub>
+
+</div>
+
+<br />
 
 ![Formula Formatter ribbon tab, and a formula before and after formatting](docs/images/format-flatten.png)
 
-The ribbon adds a **Formula Formatter** tab with two groups:
+## Features
 
-- **Selected cell**
-  - **Format** (`Ctrl+Alt+Shift+B`) spreads the formula over indented lines.
-  - **Flatten** (`Ctrl+Alt+Shift+M`) collapses it to a single line.
-  - **Options** opens the task pane with two tabs:
-    - **Settings**: layout density (Expanded, Spacious, Balanced, Compact, Dense) with a live
-      preview, indentation, single-line spacing (space after separators, spaces inside
-      brackets), the argument separator for the editor, and the keyboard shortcuts.
-    - **Editor**: load a formula, format/flatten it, review, and write it back.
-- **Whole workbook**
-  - **Format All** / **Flatten All** reformat every formula across all sheets at once.
-    Each asks for confirmation first and reports how many formulas changed. The whole
-    operation is undoable with Ctrl+Z. Sheets with an unusually large used range
-    (over 200,000 cells) are skipped and reported rather than processed.
-
-Your formula data never leaves your PC. The add-in code is static; it reads and writes
-cells locally through the Excel JavaScript API.
+| Feature | What it does |
+| --- | --- |
+| **Format** &nbsp;`Ctrl+Alt+Shift+B` | Spreads the formula in the selected cell over indented lines. |
+| **Flatten** &nbsp;`Ctrl+Alt+Shift+M` | Collapses it back to a single line. |
+| **Format All / Flatten All** | Reformats every formula in every sheet at once, after confirmation. Undo with `Ctrl+Z`. |
+| **Five layout densities** | From Expanded (every function on its own lines) to Dense (only long formulas are split). |
+| **Your style** | Spaces or tabs, indent size, spaces after separators or inside brackets, comma or semicolon. |
+| **Editor** | Load a formula into the task pane, preview it, and write it back. |
+| **Safe by design** | Only whitespace changes. If the result isn't exactly the same formula, the cell is left alone. |
 
 ![The same formula at three layout densities](docs/images/density-levels.png)
 
-## How it works
-
-Excel treats whitespace and newlines *between tokens* in a formula as insignificant
-formatting that it stores and shows in the (expanded) formula bar. Format inserts
-that formatting; flatten strips it. The add-in reads and writes `range.formulas` (the
-canonical en-US, comma-separated form), so cells always end up with Excel's own
-separator (for example a Dutch `;`). The separator setting only affects how formulas
-are shown in the task pane.
-
-- The formatter (`src/lib/formatter.ts`) tokenizes the formula, keeping string
-  literals, quoted sheet names, structured references such as `[@[Start Date]]` and
-  array constants verbatim, builds a small tree, and renders it. With a density other
-  than Expanded, a function call whose one-line form fits the width limit stays on one
-  line.
-- Safety check: the output must reduce to exactly the same formula as the input once
-  insignificant whitespace is stripped, otherwise the cell is left unchanged.
-- Whitespace between two references (the intersection operator, `=SUM(A1:A10 B1:B10)`)
-  is significant and is kept.
-
-## Cell-edit mode
-
-Excel blocks all add-in access to the workbook while a cell is being edited, and the
-text you are typing is not exposed to add-ins at all. Format/Flatten therefore cannot
-work inside edit mode. Press `Ctrl+Enter` to confirm the edit (the cell stays
-selected), then press the shortcut.
+Settings live under **Options** in the **Formula Formatter** ribbon tab. Sheets with an unusually
+large used range (over 200,000 cells) are skipped by Format All / Flatten All and reported.
 
 ## Install
 
-**Install page with all options: <https://kmailmom.github.io/excel-formula-formatter/>**
-
-The add-in is not in Microsoft's store; you sideload it, which takes about a minute.
+The add-in is not in Microsoft's store; you sideload it, which takes about a minute. The
+**[install page](https://kmailmom.github.io/excel-formula-formatter/)** has step-by-step instructions for every platform.
 
 **Windows:** download `install.cmd` from the install page and double-click it (no admin rights).
 If Windows shows "Windows protected your PC", click *More info*, *Run anyway*. Or in PowerShell:
@@ -101,6 +79,32 @@ Microsoft's documented "shared folder catalog" method, if you prefer not to run 
 Short version: your formulas never leave Excel, the add-in makes no network calls, and an
 automated check runs on every deploy. See [`SECURITY.md`](SECURITY.md) for what the
 add-in can and cannot do and how to verify it yourself.
+
+## How it works
+
+Excel treats whitespace and newlines *between tokens* in a formula as insignificant
+formatting that it stores and shows in the (expanded) formula bar. Format inserts
+that formatting; flatten strips it. The add-in reads and writes `range.formulas` (the
+canonical en-US, comma-separated form), so cells always end up with Excel's own
+separator (for example a Dutch `;`). The separator setting only affects how formulas
+are shown in the task pane.
+
+- The formatter (`src/lib/formatter.ts`) tokenizes the formula, keeping string
+  literals, quoted sheet names, structured references such as `[@[Start Date]]` and
+  array constants verbatim, builds a small tree, and renders it. With a density other
+  than Expanded, a function call whose one-line form fits the width limit stays on one
+  line.
+- Safety check: the output must reduce to exactly the same formula as the input once
+  insignificant whitespace is stripped, otherwise the cell is left unchanged.
+- Whitespace between two references (the intersection operator, `=SUM(A1:A10 B1:B10)`)
+  is significant and is kept.
+
+## Cell-edit mode
+
+Excel blocks all add-in access to the workbook while a cell is being edited, and the
+text you are typing is not exposed to add-ins at all. Format/Flatten therefore cannot
+work inside edit mode. Press `Ctrl+Enter` to confirm the edit (the cell stays
+selected), then press the shortcut.
 
 ## Development
 
