@@ -1,17 +1,17 @@
 /* global Office */
 /*
- * Keyboard shortcuts for the Beautify / Minify actions. Defaults live in
+ * Keyboard shortcuts for the Format / Flatten actions. Defaults live in
  * shortcuts.json (referenced from manifest.xml). User changes go through
  * Office.actions.replaceShortcuts, which Office stores in the user's roaming settings.
  */
 
-export type ShortcutAction = "Beautify" | "Minify";
+export type ShortcutAction = "Format" | "Flatten";
 export type ShortcutMap = Record<ShortcutAction, string | null>;
 
 /** Must match shortcuts.json. */
 export const DEFAULT_SHORTCUTS: Record<ShortcutAction, string> = {
-  Beautify: "Ctrl+Alt+Shift+B",
-  Minify: "Ctrl+Alt+Shift+M",
+  Format: "Ctrl+Alt+Shift+B",
+  Flatten: "Ctrl+Alt+Shift+M",
 };
 
 export function shortcutsSupported(): boolean {
@@ -25,7 +25,7 @@ export function shortcutsSupported(): boolean {
 /** Current combinations; null means the shortcut was overridden in a conflict prompt. */
 export async function getShortcuts(): Promise<ShortcutMap> {
   const all = (await Office.actions.getShortcuts()) as Record<string, string | null>;
-  return { Beautify: all.Beautify ?? null, Minify: all.Minify ?? null };
+  return { Format: all.Format ?? null, Flatten: all.Flatten ?? null };
 }
 
 /** Pass null for an action to restore its default from shortcuts.json. */

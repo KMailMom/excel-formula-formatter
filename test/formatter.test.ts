@@ -1,6 +1,6 @@
 /* Run with: npm test (compiles src/lib/formatter.ts + this file to .test-build and runs it). */
 import * as assert from "assert";
-import { beautifyFormula, minifyFormula, minifyFormulaSafe, toDisplayFormula, fromDisplayFormula } from "../src/lib/formatter";
+import { formatFormula, flattenFormula, flattenFormulaSafe, toDisplayFormula, fromDisplayFormula } from "../src/lib/formatter";
 
 let failed = 0;
 function test(name: string, fn: () => void): void {
@@ -18,49 +18,49 @@ const USER =
 const indent = { useSpaces: true, size: 4 };
 const spacing = { afterSeparator: false, insideParens: false };
 
-test("minify keeps spaces inside structured references", () => {
-  const b = beautifyFormula(USER, { inlineWidth: 0, indent, spacing });
+test("flatten keeps spaces inside structured references", () => {
+  const b = formatFormula(USER, { inlineWidth: 0, indent, spacing });
   assert.ok(b.ok, b.reason);
-  assert.strictEqual(minifyFormula(b.value), USER);
-  assert.ok(minifyFormula(b.value).includes("[@[Start Date]]"));
+  assert.strictEqual(flattenFormula(b.value), USER);
+  assert.ok(flattenFormula(b.value).includes("[@[Start Date]]"));
 });
 
-test("minify keeps spaces in strings, sheet names, [#This Row]", () => {
+test("flatten keeps spaces in strings, sheet names, [#This Row]", () => {
   const f = "=SUM('My Sheet'!A1:A3, Table1[[#This Row],[Col A]]) & \" a  b \"";
-  assert.strictEqual(minifyFormula(f), "=SUM('My Sheet'!A1:A3,Table1[[#This Row],[Col A]])&\" a  b \"");
+  assert.strictEqual(flattenFormula(f), "=SUM('My Sheet'!A1:A3,Table1[[#This Row],[Col A]])&\" a  b \"");
 });
 
-test("minify keeps intersection space", () => {
-  assert.strictEqual(minifyFormula("=SUM( A1:A10   B1:B10 )"), "=SUM(A1:A10 B1:B10)");
+test("flatten keeps intersection space", () => {
+  assert.strictEqual(flattenFormula("=SUM( A1:A10   B1:B10 )"), "=SUM(A1:A10 B1:B10)");
 });
 
-test("minify spacing options", () => {
-  assert.strictEqual(minifyFormula("=IF(A1>5,SUM(A1,B1),TODAY())", { afterSeparator: true, insideParens: false }), "=IF(A1>5, SUM(A1, B1), TODAY())");
-  assert.strictEqual(minifyFormula("=IF(A1>5,SUM(A1,B1),TODAY())", { afterSeparator: false, insideParens: true }), "=IF( A1>5,SUM( A1,B1 ),TODAY() )");
-  assert.strictEqual(minifyFormula("=IF(A1>5,SUM(A1,B1),\"\")", { afterSeparator: true, insideParens: true }), '=IF( A1>5, SUM( A1, B1 ), "" )');
+test("flatten spacing options", () => {
+  assert.strictEqual(flattenFormula("=IF(A1>5,SUM(A1,B1),TODAY())", { afterSeparator: true, insideParens: false }), "=IF(A1>5, SUM(A1, B1), TODAY())");
+  assert.strictEqual(flattenFormula("=IF(A1>5,SUM(A1,B1),TODAY())", { afterSeparator: false, insideParens: true }), "=IF( A1>5,SUM( A1,B1 ),TODAY() )");
+  assert.strictEqual(flattenFormula("=IF(A1>5,SUM(A1,B1),\"\")", { afterSeparator: true, insideParens: true }), '=IF( A1>5, SUM( A1, B1 ), "" )');
 });
 
 test("expanded mode breaks every call", () => {
-  const b = beautifyFormula("=IF(A1>5,N(B1),0)", { inlineWidth: 0, indent, spacing });
+  const b = formatFormula("=IF(A1>5,N(B1),0)", { inlineWidth: 0, indent, spacing });
   assert.strictEqual(b.value, "=IF(\n    A1 > 5,\n    N(\n        B1\n    ),\n    0\n)");
 });
 
 test("width mode keeps short calls on one line", () => {
-  const b = beautifyFormula(USER, { inlineWidth: 25, indent, spacing });
+  const b = formatFormula(USER, { inlineWidth: 25, indent, spacing });
   assert.ok(b.ok, b.reason);
   assert.ok(b.value.includes("N([@[Start Date]])"));
 });
 
 test("short formula stays on one line", () => {
-  assert.strictEqual(beautifyFormula("=SUM(A1:A3,B1)", { inlineWidth: 50, indent, spacing }).value, "=SUM(A1:A3,B1)");
+  assert.strictEqual(formatFormula("=SUM(A1:A3,B1)", { inlineWidth: 50, indent, spacing }).value, "=SUM(A1:A3,B1)");
   assert.strictEqual(
-    beautifyFormula("=SUM(A1:A3,B1)", { inlineWidth: 50, indent, spacing: { afterSeparator: true, insideParens: true } }).value,
+    formatFormula("=SUM(A1:A3,B1)", { inlineWidth: 50, indent, spacing: { afterSeparator: true, insideParens: true } }).value,
     "=SUM( A1:A3, B1 )"
   );
 });
 
 test("balanced on the user formula", () => {
-  const b = beautifyFormula(USER, { inlineWidth: 50, indent, spacing: { afterSeparator: true, insideParens: false } });
+  const b = formatFormula(USER, { inlineWidth: 50, indent, spacing: { afterSeparator: true, insideParens: false } });
   assert.ok(b.ok, b.reason);
 });
 
@@ -87,16 +87,16 @@ test("tricky syntax round-trips", () => {
   ];
   for (const f of cases) {
     for (const w of [0, 20, 80]) {
-      const b = beautifyFormula(f, { inlineWidth: w, indent, spacing });
+      const b = formatFormula(f, { inlineWidth: w, indent, spacing });
       assert.ok(b.ok, f + " -> " + b.reason);
-      assert.strictEqual(minifyFormula(b.value), minifyFormula(f), f);
+      assert.strictEqual(flattenFormula(b.value), flattenFormula(f), f);
     }
-    assert.strictEqual(minifyFormula(f), f, "minify of already-minified " + f);
+    assert.strictEqual(flattenFormula(f), f, "flatten of already-flattened " + f);
   }
 });
 
 test("bad formulas are left unchanged", () => {
-  const r = minifyFormulaSafe("=SUM(A1");
+  const r = flattenFormulaSafe("=SUM(A1");
   assert.strictEqual(r.ok, false);
   assert.strictEqual(r.value, "=SUM(A1");
 });

@@ -61,6 +61,8 @@ module.exports = async (env, options) => {
     entry: {
       // Shared runtime: the task pane bundle also contains the command handlers.
       taskpane: "./src/taskpane/taskpane.ts",
+      // Browser version of the formatter (online.html), same formatter code.
+      web: "./src/web/web.ts",
     },
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -83,6 +85,12 @@ module.exports = async (env, options) => {
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
         chunks: ["taskpane"],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "online.html",
+        template: "./src/web/online.html",
+        chunks: ["web"],
+        templateParameters: { repoUrl },
       }),
       new CopyWebpackPlugin({
         patterns: [

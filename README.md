@@ -1,24 +1,26 @@
 # Formula Formatter for Excel
 
-An Excel add-in that beautifies or minifies the formula in the selected cell, from the
+An Excel add-in that formats or flattens the formula in the selected cell, from the
 ribbon or with a keyboard shortcut.
 
-**[Install page](https://kmailmom.github.io/excel-formula-formatter/)** · free and open source (MIT)
+**[Install page](https://kmailmom.github.io/excel-formula-formatter/)** ·
+**[Use it online](https://kmailmom.github.io/excel-formula-formatter/online.html)** (no install) ·
+free and open source (MIT)
 
-![Formula Formatter ribbon tab, and a formula before and after Beautify](docs/images/beautify-minify.png)
+![Formula Formatter ribbon tab, and a formula before and after formatting](docs/images/format-flatten.png)
 
 The ribbon adds a **Formula Formatter** tab with two groups:
 
 - **Selected cell**
-  - **Beautify** (`Ctrl+Alt+Shift+B`) spreads the formula over indented lines.
-  - **Minify** (`Ctrl+Alt+Shift+M`) collapses it to a single line.
+  - **Format** (`Ctrl+Alt+Shift+B`) spreads the formula over indented lines.
+  - **Flatten** (`Ctrl+Alt+Shift+M`) collapses it to a single line.
   - **Options** opens the task pane with two tabs:
     - **Settings**: layout density (Expanded, Spacious, Balanced, Compact, Dense) with a live
       preview, indentation, single-line spacing (space after separators, spaces inside
       brackets), the argument separator for the editor, and the keyboard shortcuts.
-    - **Editor**: load a formula, beautify/minify it, review, and write it back.
+    - **Editor**: load a formula, format/flatten it, review, and write it back.
 - **Whole workbook**
-  - **Beautify All** / **Minify All** reformat every formula across all sheets at once.
+  - **Format All** / **Flatten All** reformat every formula across all sheets at once.
     Each asks for confirmation first and reports how many formulas changed. The whole
     operation is undoable with Ctrl+Z. Sheets with an unusually large used range
     (over 200,000 cells) are skipped and reported rather than processed.
@@ -31,8 +33,8 @@ cells locally through the Excel JavaScript API.
 ## How it works
 
 Excel treats whitespace and newlines *between tokens* in a formula as insignificant
-formatting that it stores and shows in the (expanded) formula bar. Beautify inserts
-that formatting; minify strips it. The add-in reads and writes `range.formulas` (the
+formatting that it stores and shows in the (expanded) formula bar. Format inserts
+that formatting; flatten strips it. The add-in reads and writes `range.formulas` (the
 canonical en-US, comma-separated form), so cells always end up with Excel's own
 separator (for example a Dutch `;`). The separator setting only affects how formulas
 are shown in the task pane.
@@ -50,7 +52,7 @@ are shown in the task pane.
 ## Cell-edit mode
 
 Excel blocks all add-in access to the workbook while a cell is being edited, and the
-text you are typing is not exposed to add-ins at all. Beautify/Minify therefore cannot
+text you are typing is not exposed to add-ins at all. Format/Flatten therefore cannot
 work inside edit mode. Press `Ctrl+Enter` to confirm the edit (the cell stays
 selected), then press the shortcut.
 
@@ -140,12 +142,13 @@ Users then re-run the installer and restart Excel; if Excel keeps the old ribbon
 manifest.xml                 add-in manifest (ribbon, shared runtime, resources)
 shortcuts.json               keyboard shortcut actions and defaults
 webpack.config.js            build + dev server (production URLs derived from the repo)
-src/lib/formatter.ts         tokenizer, beautify / minify, separator conversion
+src/lib/formatter.ts         tokenizer, format / flatten, separator conversion
 src/lib/settings.ts          stored preferences and density levels
 src/lib/shortcuts.ts         keyboard shortcut helpers
 src/lib/dialog.ts            message / confirmation dialog helper
 src/commands/commands.ts     ribbon + shortcut handlers (run in the shared runtime)
 src/taskpane/                task pane (Settings + Editor), entry of the shared runtime
+src/web/                     browser version (online.html), same formatter
 src/dialog/dialog.html       dialog page
 assets/                      ribbon icons; regenerate with `npm run icons`
 test/formatter.test.ts       formatter tests (`npm test`)

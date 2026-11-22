@@ -4,7 +4,7 @@
  * the shared runtime (it is bundled into taskpane.html) and registers its actions with
  * Office.actions.associate when imported.
  */
-import { beautifyFormula, minifyFormulaSafe, isFormula, FormatOptions, SpacingOptions } from "../lib/formatter";
+import { formatFormula, flattenFormulaSafe, isFormula, FormatOptions, SpacingOptions } from "../lib/formatter";
 import { loadSettings, toFormatOptions } from "../lib/settings";
 import { showDialog, DialogKind } from "../lib/dialog";
 
@@ -23,16 +23,16 @@ interface CellOutcome {
 }
 type CellTransform = (formula: string) => CellOutcome;
 
-function beautifyTransform(options: FormatOptions): CellTransform {
+function formatTransform(options: FormatOptions): CellTransform {
   return (formula) => {
-    const r = beautifyFormula(formula, options);
+    const r = formatFormula(formula, options);
     return { value: r.value, applied: r.ok, reason: r.reason };
   };
 }
 
-function minifyTransform(spacing: SpacingOptions): CellTransform {
+function flattenTransform(spacing: SpacingOptions): CellTransform {
   return (formula) => {
-    const r = minifyFormulaSafe(formula, spacing);
+    const r = flattenFormulaSafe(formula, spacing);
     return { value: r.value, applied: r.ok, reason: r.reason };
   };
 }
@@ -189,31 +189,31 @@ function complete(event: CommandEvent): void {
   }
 }
 
-async function runBeautify(event?: CommandEvent) {
+async function runFormat(event?: CommandEvent) {
   try {
-    const s = await transformSelection(beautifyTransform(toFormatOptions(loadSettings())));
+    const s = await transformSelection(formatTransform(toFormatOptions(loadSettings())));
     if (s.formulaCells === 0) {
-      await notify("Beautify", "No formula found in the selected cell(s).");
+      await notify("Format", "No formula found in the selected cell(s).");
     } else if (s.changed === 0 && s.firstSkipReason) {
-      await notify("Beautify", "The formula was left unchanged: " + s.firstSkipReason + ".", "warning");
+      await notify("Format", "The formula was left unchanged: " + s.firstSkipReason + ".", "warning");
     }
   } catch (err) {
-    await notify("Beautify failed", errorMessage(err), "error");
+    await notify("Format failed", errorMessage(err), "error");
   } finally {
     complete(event);
   }
 }
 
-async function runMinify(event?: CommandEvent) {
+async function runFlatten(event?: CommandEvent) {
   try {
-    const s = await transformSelection(minifyTransform(loadSettings().spacing));
+    const s = await transformSelection(flattenTransform(loadSettings().spacing));
     if (s.formulaCells === 0) {
-      await notify("Minify", "No formula found in the selected cell(s).");
+      await notify("Flatten", "No formula found in the selected cell(s).");
     } else if (s.changed === 0 && s.firstSkipReason) {
-      await notify("Minify", "The formula was left unchanged: " + s.firstSkipReason + ".", "warning");
+      await notify("Flatten", "The formula was left unchanged: " + s.firstSkipReason + ".", "warning");
     }
   } catch (err) {
-    await notify("Minify failed", errorMessage(err), "error");
+    await notify("Flatten failed", errorMessage(err), "error");
   } finally {
     complete(event);
   }
@@ -231,35 +231,35 @@ function summarizeWorkbook(verb: string, s: WorkbookSummary): string {
   return `${verb} ${cells} across ${sheets}.` + skipNote;
 }
 
-async function runBeautifyAll(event?: CommandEvent) {
+async function runFormatAll(event?: CommandEvent) {
   try {
     const go = await confirmDialog(
-      "Beautify all formulas?",
+      "Format all formulas?",
       "Every formula on every sheet of this workbook will be reformatted with your current settings. You can undo this with Ctrl+Z.",
-      "Beautify all"
+      "Format all"
     );
     if (!go) return;
-    const s = await transformWorkbook(beautifyTransform(toFormatOptions(loadSettings())));
-    await notify("Beautify all", summarizeWorkbook("Beautified", s), s.changed > 0 ? "success" : "info");
+    const s = await transformWorkbook(formatTransform(toFormatOptions(loadSettings())));
+    await notify("Format all", summarizeWorkbook("Formatted", s), s.changed > 0 ? "success" : "info");
   } catch (err) {
-    await notify("Beautify all failed", errorMessage(err), "error");
+    await notify("Format all failed", errorMessage(err), "error");
   } finally {
     complete(event);
   }
 }
 
-async function runMinifyAll(event?: CommandEvent) {
+async function runFlattenAll(event?: CommandEvent) {
   try {
     const go = await confirmDialog(
-      "Minify all formulas?",
+      "Flatten all formulas?",
       "Every formula on every sheet of this workbook will be collapsed to a single line. You can undo this with Ctrl+Z.",
-      "Minify all"
+      "Flatten all"
     );
     if (!go) return;
-    const s = await transformWorkbook(minifyTransform(loadSettings().spacing));
-    await notify("Minify all", summarizeWorkbook("Minified", s), s.changed > 0 ? "success" : "info");
+    const s = await transformWorkbook(flattenTransform(loadSettings().spacing));
+    await notify("Flatten all", summarizeWorkbook("Flattened", s), s.changed > 0 ? "success" : "info");
   } catch (err) {
-    await notify("Minify all failed", errorMessage(err), "error");
+    await notify("Flatten all failed", errorMessage(err), "error");
   } finally {
     complete(event);
   }
@@ -267,7 +267,7 @@ async function runMinifyAll(event?: CommandEvent) {
 
 // FunctionName values in manifest.xml and action ids in shortcuts.json must match
 // these ids exactly.
-Office.actions.associate("Beautify", runBeautify);
-Office.actions.associate("Minify", runMinify);
-Office.actions.associate("BeautifyAll", runBeautifyAll);
-Office.actions.associate("MinifyAll", runMinifyAll);
+Office.actions.associate("Format", runFormat);
+Office.actions.associate("Flatten", runFlatten);
+Office.actions.associate("FormatAll", runFormatAll);
+Office.actions.associate("FlattenAll", runFlattenAll);

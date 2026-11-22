@@ -1,15 +1,15 @@
 /*
- * Core beautify / minify logic. Host-agnostic and pure (no Office.js, no DOM), so it
+ * Core format / flatten logic. Host-agnostic and pure (no Office.js, no DOM), so it
  * can be unit-tested in Node.
  *
  * Pipeline: tokenize -> parse into a small tree -> render.
  *  - The tokenizer is quote/bracket aware: string literals, quoted sheet names,
  *    structured references ([@[Start Date]]) and array constants ({1,2;3,4}) are
  *    kept verbatim, including any spaces inside them.
- *  - Beautify renders the tree with a width budget: a function call whose one-line
+ *  - Format renders the tree with a width budget: a function call whose one-line
  *    form fits within `layout.inlineWidth` stays on one line, otherwise its arguments
  *    go on their own indented lines. inlineWidth 0 expands every call.
- *  - Minify renders everything on one line.
+ *  - Flatten renders everything on one line.
  *  - Safety net: any output must reduce to the same canonical form as the input once
  *    insignificant whitespace is stripped, otherwise the formula is left unchanged.
  *
@@ -39,7 +39,7 @@ export interface FormatOptions {
   indent: IndentOptions;
   spacing: SpacingOptions;
   /**
-   * Beautify only: a function call or bracketed group whose single-line form is at
+   * Format only: a function call or bracketed group whose single-line form is at
    * most this many characters stays on one line. 0 = always expand.
    */
   inlineWidth: number;
@@ -57,9 +57,6 @@ export interface FormatResult {
   /** why the formula was left unchanged (only set when ok is false) */
   reason?: string;
 }
-
-/** Back-compat alias. */
-export type BeautifyResult = FormatResult;
 
 /** True when the value is a formula we should try to transform. */
 export function isFormula(value: unknown): value is string {
@@ -310,7 +307,7 @@ class Parser {
     if (after?.type === "open" && after.call) {
       this.pos++;
       // Render the callee verbatim as the "name" of the chained call.
-      return this.finishCall(renderInline(node, MINIFY_STYLE));
+      return this.finishCall(renderInline(node, FLATTEN_STYLE));
     }
     return node;
   }
@@ -345,7 +342,7 @@ interface InlineStyle {
   opSpace: boolean;
 }
 
-const MINIFY_STYLE: InlineStyle = { sep: ",", open: "(", close: ")", opSpace: false };
+const FLATTEN_STYLE: InlineStyle = { sep: ",", open: "(", close: ")", opSpace: false };
 
 function inlineStyle(spacing: SpacingOptions, opSpace: boolean): InlineStyle {
   return {
@@ -385,7 +382,7 @@ function renderExprInline(e: Expr, style: InlineStyle): string {
 
 const MIN_FLOW_WIDTH = 60;
 
-class Beautifier {
+class LayoutRenderer {
   private style: InlineStyle;
   private unit: string;
 
@@ -470,7 +467,7 @@ function stripLeadingEquals(formula: string): string {
 
 /** The whitespace-free (except intersections) form used for the safety check. */
 function canonical(list: Expr[]): string {
-  return list.map((e) => renderExprInline(e, MINIFY_STYLE)).join(",");
+  return list.map((e) => renderExprInline(e, FLATTEN_STYLE)).join(",");
 }
 
 function failure(formula: string, e: unknown): FormatResult {
@@ -493,7 +490,7 @@ function checked(formula: string, out: string, list: Expr[]): FormatResult {
  * Expand a formula onto indented lines. When `ok` is false the original formula is
  * returned unchanged (safe fallback).
  */
-export function beautifyFormula(formula: string, options: Partial<FormatOptions> = {}): FormatResult {
+export function formatFormula(formula: string, options: Partial<FormatOptions> = {}): FormatResult {
   const opts: FormatOptions = { ...DEFAULT_FORMAT, ...options };
   let list: Expr[];
   try {
@@ -501,13 +498,13 @@ export function beautifyFormula(formula: string, options: Partial<FormatOptions>
   } catch (e) {
     return failure(formula, e);
   }
-  const b = new Beautifier(opts);
+  const b = new LayoutRenderer(opts);
   const body = list.length === 1 ? b.expr(list[0], 0) : list.map((e) => b.expr(e, 0)).join(",\n");
   return checked(formula, "=" + body, list);
 }
 
 /** Collapse a formula to a single line, with optional readability spacing. */
-export function minifyFormulaSafe(formula: string, spacing: SpacingOptions = DEFAULT_SPACING): FormatResult {
+export function flattenFormulaSafe(formula: string, spacing: SpacingOptions = DEFAULT_SPACING): FormatResult {
   let list: Expr[];
   try {
     list = parse(stripLeadingEquals(formula));
@@ -518,9 +515,9 @@ export function minifyFormulaSafe(formula: string, spacing: SpacingOptions = DEF
   return checked(formula, "=" + list.map((e) => renderExprInline(e, style)).join(style.sep), list);
 }
 
-/** Convenience wrapper: minified formula, or the original when it cannot be read. */
-export function minifyFormula(formula: string, spacing: SpacingOptions = DEFAULT_SPACING): string {
-  return minifyFormulaSafe(formula, spacing).value;
+/** Convenience wrapper: flattened formula, or the original when it cannot be read. */
+export function flattenFormula(formula: string, spacing: SpacingOptions = DEFAULT_SPACING): string {
+  return flattenFormulaSafe(formula, spacing).value;
 }
 
 // ---- display conversion ------------------------------------------------------

@@ -5,7 +5,7 @@ yourself instead of taking our word for it.
 
 ## What the add-in does
 
-- It reads the formulas of the selected cells (or, for Beautify All / Minify All, of the whole
+- It reads the formulas of the selected cells (or, for Format All / Flatten All, of the whole
   workbook), reformats the whitespace, and writes them back. A safety check refuses to write a
   formula that differs from the original in anything but whitespace.
 - It stores your preferences in the add-in's browser storage on your device, and custom keyboard
@@ -23,7 +23,7 @@ yourself instead of taking our word for it.
 ## How you can verify this
 
 1. **Automated network audit.** [`scripts/audit-bundle.mjs`](scripts/audit-bundle.mjs) scans the
-   built add-in and fails if it uses any API that can send data (`fetch`, `XMLHttpRequest`,
+   built add-in and the online version and fails if either uses any API that can send data (`fetch`, `XMLHttpRequest`,
    `WebSocket`, `EventSource`, `sendBeacon`, `RTCPeerConnection`, `importScripts`, `eval`,
    `new Function`) or references any URL other than Office.js. It runs in
    [the deploy workflow](.github/workflows/deploy.yml) before every deploy; a failure stops the

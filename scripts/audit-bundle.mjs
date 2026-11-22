@@ -1,15 +1,17 @@
 // Network audit of the built add-in (run after `npm run build`).
 //
-// Fails if the code that runs inside Excel (taskpane.html, taskpane.js, dialog.html):
+// Fails if the code that runs inside Excel (taskpane.html, taskpane.js, dialog.html) or the
+// browser version (online.html, web.js):
 //   - uses any browser API that can send data over the network, or
-//   - references any external URL other than Microsoft's Office.js library.
+//   - references any external URL other than Microsoft's Office.js library
+//     (plain <a href> links in HTML are allowed: they only navigate when clicked).
 // The GitHub Action runs this before every deploy, so the hosted add-in can't
 // silently start "phoning home".
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const dist = new URL("../dist/", import.meta.url).pathname;
-const runtimeFiles = ["taskpane.html", "taskpane.js", "dialog.html"];
+const runtimeFiles = ["taskpane.html", "taskpane.js", "dialog.html", "online.html", "web.js"];
 
 const forbiddenApis = [
   /\bfetch\s*\(/,
@@ -26,7 +28,9 @@ const allowedUrlPrefixes = ["https://appsforoffice.microsoft.com/lib/1/hosted/of
 
 let problems = 0;
 for (const file of runtimeFiles) {
-  const text = readFileSync(join(dist, file), "utf8");
+  let text = readFileSync(join(dist, file), "utf8");
+  // Plain links (<a href>) only navigate when clicked; they load and send nothing.
+  if (file.endsWith(".html")) text = text.replace(/<a\s[^>]*>/gi, "<a>");
   for (const re of forbiddenApis) {
     if (re.test(text)) {
       console.error(`FAIL ${file}: uses ${re.source}`);

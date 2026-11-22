@@ -19,9 +19,9 @@ const bar = (x, y, w, color = GREEN) => `<rect x="${x}" y="${y}" width="${w}" he
 const sparkle = (cx, cy, r, color = AMBER) =>
   `<path d="M${cx} ${cy - r} Q${cx + r * 0.18} ${cy - r * 0.18} ${cx + r} ${cy} Q${cx + r * 0.18} ${cy + r * 0.18} ${cx} ${cy + r} Q${cx - r * 0.18} ${cy + r * 0.18} ${cx - r} ${cy} Q${cx - r * 0.18} ${cy - r * 0.18} ${cx} ${cy - r}Z" fill="${color}"/>`;
 
-const beautifyGlyph = () => bar(2, 6, 12) + bar(8, 14, 16) + bar(2, 22, 8) + sparkle(25, 7, 6);
+const formatGlyph = () => bar(2, 6, 12) + bar(8, 14, 16) + bar(2, 22, 8) + sparkle(25, 7, 6);
 
-const minifyGlyph = () =>
+const flattenGlyph = () =>
   bar(2, 14, 28) +
   `<path d="M10 3 L16 9 L22 3" fill="none" stroke="${BLUE}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>` +
   `<path d="M10 29 L16 23 L22 29" fill="none" stroke="${BLUE}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
@@ -57,11 +57,11 @@ const logo = () =>
   `<g transform="translate(4 4) scale(0.75)">${bar(2, 6, 12, "#fff") + bar(8, 14, 16, "#fff") + bar(2, 22, 8, "#fff") + sparkle(25, 7, 6)}</g>`;
 
 const ICONS = {
-  beautify: beautifyGlyph(),
-  minify: minifyGlyph(),
+  format: formatGlyph(),
+  flatten: flattenGlyph(),
   options: gear(),
-  "beautify-all": scaled(beautifyGlyph(), 0.7) + badge(),
-  "minify-all": scaled(minifyGlyph(), 0.7) + badge(),
+  "format-all": scaled(formatGlyph(), 0.7) + badge(),
+  "flatten-all": scaled(flattenGlyph(), 0.7) + badge(),
 };
 const RIBBON_SIZES = [16, 20, 24, 32, 40, 48, 64, 80];
 const LOGO_SIZES = [16, 32, 64, 80, 128];

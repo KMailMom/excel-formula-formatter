@@ -4,7 +4,7 @@
  * below) the ribbon / keyboard command handlers.
  */
 import "../commands/commands";
-import { beautifyFormula, minifyFormulaSafe, toDisplayFormula, fromDisplayFormula } from "../lib/formatter";
+import { formatFormula, flattenFormulaSafe, toDisplayFormula, fromDisplayFormula } from "../lib/formatter";
 import { loadSettings, saveSettings, toFormatOptions, Settings, DENSITY_LEVELS } from "../lib/settings";
 import { DEFAULT_SHORTCUTS, ShortcutAction, shortcutsSupported, getShortcuts, setShortcuts, shortcutsInUse, comboFromEvent } from "../lib/shortcuts";
 
@@ -89,7 +89,7 @@ function renderSettingsInfo(): void {
 
   // Preview the user's own formula when the editor holds one, else a sample.
   const source = toCanonical(previewEl.value.trim()) ?? SAMPLE_FORMULA;
-  const result = beautifyFormula(source, toFormatOptions(settings));
+  const result = formatFormula(source, toFormatOptions(settings));
   $("sample").textContent = toDisplayFormula(result.value, displaySeparator());
 }
 
@@ -138,11 +138,11 @@ function prettyCombo(combo: string | null): string {
 async function refreshShortcuts(): Promise<void> {
   try {
     const current = await getShortcuts();
-    $("kbdBeautify").textContent = prettyCombo(current.Beautify);
-    $("kbdMinify").textContent = prettyCombo(current.Minify);
+    $("kbdFormat").textContent = prettyCombo(current.Format);
+    $("kbdFlatten").textContent = prettyCombo(current.Flatten);
   } catch {
-    $("kbdBeautify").textContent = prettyCombo(DEFAULT_SHORTCUTS.Beautify);
-    $("kbdMinify").textContent = prettyCombo(DEFAULT_SHORTCUTS.Minify);
+    $("kbdFormat").textContent = prettyCombo(DEFAULT_SHORTCUTS.Format);
+    $("kbdFlatten").textContent = prettyCombo(DEFAULT_SHORTCUTS.Flatten);
   }
 }
 
@@ -188,8 +188,8 @@ async function onShortcutKey(e: KeyboardEvent): Promise<void> {
 function initShortcuts(): void {
   if (!shortcutsSupported()) {
     document.querySelectorAll<HTMLButtonElement>("#shortcutCard button").forEach((b) => (b.disabled = true));
-    $("kbdBeautify").textContent = prettyCombo(DEFAULT_SHORTCUTS.Beautify);
-    $("kbdMinify").textContent = prettyCombo(DEFAULT_SHORTCUTS.Minify);
+    $("kbdFormat").textContent = prettyCombo(DEFAULT_SHORTCUTS.Format);
+    $("kbdFlatten").textContent = prettyCombo(DEFAULT_SHORTCUTS.Flatten);
     shortcutStatus("Changing shortcuts needs a newer Excel version (KeyboardShortcuts 1.1). The defaults shown here still work.");
     return;
   }
@@ -239,9 +239,9 @@ function toCanonical(src: string): string | null {
   const sep = displaySeparator();
   const canonical = fromDisplayFormula(src, sep);
   // Accept a pasted formula in either separator style.
-  if (sep === "," && !minifyFormulaSafe(canonical).ok) {
+  if (sep === "," && !flattenFormulaSafe(canonical).ok) {
     const alt = fromDisplayFormula(src, ";");
-    if (minifyFormulaSafe(alt).ok) return alt;
+    if (flattenFormulaSafe(alt).ok) return alt;
   }
   return canonical;
 }
@@ -275,25 +275,25 @@ async function loadFromCell(): Promise<void> {
   renderSettingsInfo();
 }
 
-function doBeautify(): void {
-  const f = editorFormula("Nothing to beautify.");
+function doFormat(): void {
+  const f = editorFormula("Nothing to format.");
   if (!f) return;
-  const result = beautifyFormula(f, toFormatOptions(settings));
+  const result = formatFormula(f, toFormatOptions(settings));
   if (result.ok) {
     previewEl.value = toDisplayFormula(result.value, displaySeparator());
-    setStatus("Beautified. Review, then write back to the cell.");
+    setStatus("Formatted. Review, then write back to the cell.");
   } else {
     setStatus("Left unchanged: " + (result.reason ?? "unsupported syntax") + ".", true);
   }
 }
 
-function doMinify(): void {
-  const f = editorFormula("Nothing to minify.");
+function doFlatten(): void {
+  const f = editorFormula("Nothing to flatten.");
   if (!f) return;
-  const result = minifyFormulaSafe(f, settings.spacing);
+  const result = flattenFormulaSafe(f, settings.spacing);
   if (result.ok) {
     previewEl.value = toDisplayFormula(result.value, displaySeparator());
-    setStatus("Minified. Review, then write back to the cell.");
+    setStatus("Flattened. Review, then write back to the cell.");
   } else {
     setStatus("Left unchanged: " + (result.reason ?? "unsupported syntax") + ".", true);
   }
@@ -341,8 +341,8 @@ Office.onReady(async (info) => {
   $("density").addEventListener("input", onSettingsChanged);
 
   $("load").addEventListener("click", () => void loadFromCell());
-  $("beautify").addEventListener("click", doBeautify);
-  $("minify").addEventListener("click", doMinify);
+  $("format").addEventListener("click", doFormat);
+  $("flatten").addEventListener("click", doFlatten);
   $("apply").addEventListener("click", () => void applyToCell());
 
   initShortcuts();

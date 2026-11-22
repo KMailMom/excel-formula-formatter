@@ -1,7 +1,7 @@
 /*
  * User preferences. Stored in localStorage, which the shared runtime (task pane and
  * ribbon/keyboard commands run in the same page) reads on every command, so a change
- * in the Options pane applies to the next Beautify/Minify immediately.
+ * in the Options pane applies to the next Format/Flatten immediately.
  */
 import { IndentOptions, SpacingOptions, FormatOptions, DEFAULT_INDENT, DEFAULT_SPACING } from "./formatter";
 

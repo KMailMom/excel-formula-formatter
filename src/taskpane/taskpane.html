@@ -111,7 +111,7 @@
       <!-- ===== Settings ===== -->
       <div class="panel active" id="panel-settings" role="tabpanel" aria-labelledby="tab-settings">
         <section>
-          <h2>Beautify layout</h2>
+          <h2>Format layout</h2>
           <div class="card">
             <div class="density-head">
               <span class="field-label">How much to split</span>
@@ -139,7 +139,7 @@
         <section>
           <h2>Single-line spacing</h2>
           <div class="card">
-            <p class="note">Applies to Minify and to the parts that Beautify keeps on one line.</p>
+            <p class="note">Applies to Flatten and to the parts that Format keeps on one line.</p>
             <label class="switch">
               <input type="checkbox" id="spaceAfterSep" />
               <span>Space after each separator<br /><span class="sub"><code>IF(A1;1;0)</code> &rarr; <code>IF(A1; 1; 0)</code></span></span>
@@ -170,14 +170,14 @@
           <h2>Keyboard shortcuts</h2>
           <div class="card" id="shortcutCard">
             <div class="kbd-row">
-              <span class="field-label">Beautify</span>
-              <button class="kbd" type="button" id="kbdBeautify" data-action="Beautify">...</button>
-              <button class="btn small" type="button" data-reset="Beautify" title="Restore default">Reset</button>
+              <span class="field-label">Format</span>
+              <button class="kbd" type="button" id="kbdFormat" data-action="Format">...</button>
+              <button class="btn small" type="button" data-reset="Format" title="Restore default">Reset</button>
             </div>
             <div class="kbd-row">
-              <span class="field-label">Minify</span>
-              <button class="kbd" type="button" id="kbdMinify" data-action="Minify">...</button>
-              <button class="btn small" type="button" data-reset="Minify" title="Restore default">Reset</button>
+              <span class="field-label">Flatten</span>
+              <button class="kbd" type="button" id="kbdFlatten" data-action="Flatten">...</button>
+              <button class="btn small" type="button" data-reset="Flatten" title="Restore default">Reset</button>
             </div>
             <p class="note" id="shortcutStatus">Click a shortcut, then press the new key combination. Esc cancels.</p>
           </div>
@@ -190,8 +190,8 @@
         <div class="status" id="status"></div>
         <div class="btns">
           <button id="load" class="btn wide" type="button">Load from cell</button>
-          <button id="beautify" class="btn" type="button">Beautify</button>
-          <button id="minify" class="btn" type="button">Minify</button>
+          <button id="format" class="btn" type="button">Format</button>
+          <button id="flatten" class="btn" type="button">Flatten</button>
           <button id="apply" class="btn primary wide" type="button">Write back to cell</button>
         </div>
         <p class="note">Tip: expand the formula bar (Ctrl+Shift+U) to see multi-line formulas.</p>

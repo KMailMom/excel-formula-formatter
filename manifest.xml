@@ -7,11 +7,11 @@
   xsi:type="TaskPaneApp">
 
   <Id>117076a0-2ea1-4038-be03-5425e8b2a84a</Id>
-  <Version>1.2.1.0</Version>
+  <Version>1.3.0.0</Version>
   <ProviderName>Formula Formatter contributors</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Formula Formatter for Excel" />
-  <Description DefaultValue="Beautify or minify the formula in the selected cell at the click of a button." />
+  <Description DefaultValue="Format or flatten the formula in the selected cell at the click of a button." />
   <IconUrl DefaultValue="https://localhost:3000/assets/logo-32.png" />
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/logo-64.png" />
   <SupportUrl DefaultValue="https://localhost:3000/support.html" />
@@ -56,52 +56,52 @@
               <Group id="EFF.Group1">
                 <Label resid="Group.Label" />
                 <Icon>
-                  <bt:Image size="16" resid="Beautify.16" />
-                  <bt:Image size="32" resid="Beautify.32" />
-                  <bt:Image size="80" resid="Beautify.80" />
+                  <bt:Image size="16" resid="Format.16" />
+                  <bt:Image size="32" resid="Format.32" />
+                  <bt:Image size="80" resid="Format.80" />
                 </Icon>
 
-                <!-- Beautify (one-click function command) -->
-                <Control xsi:type="Button" id="EFF.Beautify">
-                  <Label resid="Beautify.Label" />
+                <!-- Format (one-click function command) -->
+                <Control xsi:type="Button" id="EFF.Format">
+                  <Label resid="Format.Label" />
                   <Supertip>
-                    <Title resid="Beautify.Label" />
-                    <Description resid="Beautify.Desc" />
+                    <Title resid="Format.Label" />
+                    <Description resid="Format.Desc" />
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Beautify.16" />
-                    <bt:Image size="20" resid="Beautify.20" />
-                    <bt:Image size="24" resid="Beautify.24" />
-                    <bt:Image size="32" resid="Beautify.32" />
-                    <bt:Image size="40" resid="Beautify.40" />
-                    <bt:Image size="48" resid="Beautify.48" />
-                    <bt:Image size="64" resid="Beautify.64" />
-                    <bt:Image size="80" resid="Beautify.80" />
+                    <bt:Image size="16" resid="Format.16" />
+                    <bt:Image size="20" resid="Format.20" />
+                    <bt:Image size="24" resid="Format.24" />
+                    <bt:Image size="32" resid="Format.32" />
+                    <bt:Image size="40" resid="Format.40" />
+                    <bt:Image size="48" resid="Format.48" />
+                    <bt:Image size="64" resid="Format.64" />
+                    <bt:Image size="80" resid="Format.80" />
                   </Icon>
                   <Action xsi:type="ExecuteFunction">
-                    <FunctionName>Beautify</FunctionName>
+                    <FunctionName>Format</FunctionName>
                   </Action>
                 </Control>
 
-                <!-- Minify (one-click function command) -->
-                <Control xsi:type="Button" id="EFF.Minify">
-                  <Label resid="Minify.Label" />
+                <!-- Flatten (one-click function command) -->
+                <Control xsi:type="Button" id="EFF.Flatten">
+                  <Label resid="Flatten.Label" />
                   <Supertip>
-                    <Title resid="Minify.Label" />
-                    <Description resid="Minify.Desc" />
+                    <Title resid="Flatten.Label" />
+                    <Description resid="Flatten.Desc" />
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Minify.16" />
-                    <bt:Image size="20" resid="Minify.20" />
-                    <bt:Image size="24" resid="Minify.24" />
-                    <bt:Image size="32" resid="Minify.32" />
-                    <bt:Image size="40" resid="Minify.40" />
-                    <bt:Image size="48" resid="Minify.48" />
-                    <bt:Image size="64" resid="Minify.64" />
-                    <bt:Image size="80" resid="Minify.80" />
+                    <bt:Image size="16" resid="Flatten.16" />
+                    <bt:Image size="20" resid="Flatten.20" />
+                    <bt:Image size="24" resid="Flatten.24" />
+                    <bt:Image size="32" resid="Flatten.32" />
+                    <bt:Image size="40" resid="Flatten.40" />
+                    <bt:Image size="48" resid="Flatten.48" />
+                    <bt:Image size="64" resid="Flatten.64" />
+                    <bt:Image size="80" resid="Flatten.80" />
                   </Icon>
                   <Action xsi:type="ExecuteFunction">
-                    <FunctionName>Minify</FunctionName>
+                    <FunctionName>Flatten</FunctionName>
                   </Action>
                 </Control>
 
@@ -131,52 +131,52 @@
               <Group id="EFF.Group2">
                 <Label resid="Group2.Label" />
                 <Icon>
-                  <bt:Image size="16" resid="BeautifyAll.16" />
-                  <bt:Image size="32" resid="BeautifyAll.32" />
-                  <bt:Image size="80" resid="BeautifyAll.80" />
+                  <bt:Image size="16" resid="FormatAll.16" />
+                  <bt:Image size="32" resid="FormatAll.32" />
+                  <bt:Image size="80" resid="FormatAll.80" />
                 </Icon>
 
-                <!-- Beautify All (whole workbook) -->
-                <Control xsi:type="Button" id="EFF.BeautifyAll">
-                  <Label resid="BeautifyAll.Label" />
+                <!-- Format All (whole workbook) -->
+                <Control xsi:type="Button" id="EFF.FormatAll">
+                  <Label resid="FormatAll.Label" />
                   <Supertip>
-                    <Title resid="BeautifyAll.Label" />
-                    <Description resid="BeautifyAll.Desc" />
+                    <Title resid="FormatAll.Label" />
+                    <Description resid="FormatAll.Desc" />
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="BeautifyAll.16" />
-                    <bt:Image size="20" resid="BeautifyAll.20" />
-                    <bt:Image size="24" resid="BeautifyAll.24" />
-                    <bt:Image size="32" resid="BeautifyAll.32" />
-                    <bt:Image size="40" resid="BeautifyAll.40" />
-                    <bt:Image size="48" resid="BeautifyAll.48" />
-                    <bt:Image size="64" resid="BeautifyAll.64" />
-                    <bt:Image size="80" resid="BeautifyAll.80" />
+                    <bt:Image size="16" resid="FormatAll.16" />
+                    <bt:Image size="20" resid="FormatAll.20" />
+                    <bt:Image size="24" resid="FormatAll.24" />
+                    <bt:Image size="32" resid="FormatAll.32" />
+                    <bt:Image size="40" resid="FormatAll.40" />
+                    <bt:Image size="48" resid="FormatAll.48" />
+                    <bt:Image size="64" resid="FormatAll.64" />
+                    <bt:Image size="80" resid="FormatAll.80" />
                   </Icon>
                   <Action xsi:type="ExecuteFunction">
-                    <FunctionName>BeautifyAll</FunctionName>
+                    <FunctionName>FormatAll</FunctionName>
                   </Action>
                 </Control>
 
-                <!-- Minify All (whole workbook) -->
-                <Control xsi:type="Button" id="EFF.MinifyAll">
-                  <Label resid="MinifyAll.Label" />
+                <!-- Flatten All (whole workbook) -->
+                <Control xsi:type="Button" id="EFF.FlattenAll">
+                  <Label resid="FlattenAll.Label" />
                   <Supertip>
-                    <Title resid="MinifyAll.Label" />
-                    <Description resid="MinifyAll.Desc" />
+                    <Title resid="FlattenAll.Label" />
+                    <Description resid="FlattenAll.Desc" />
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="MinifyAll.16" />
-                    <bt:Image size="20" resid="MinifyAll.20" />
-                    <bt:Image size="24" resid="MinifyAll.24" />
-                    <bt:Image size="32" resid="MinifyAll.32" />
-                    <bt:Image size="40" resid="MinifyAll.40" />
-                    <bt:Image size="48" resid="MinifyAll.48" />
-                    <bt:Image size="64" resid="MinifyAll.64" />
-                    <bt:Image size="80" resid="MinifyAll.80" />
+                    <bt:Image size="16" resid="FlattenAll.16" />
+                    <bt:Image size="20" resid="FlattenAll.20" />
+                    <bt:Image size="24" resid="FlattenAll.24" />
+                    <bt:Image size="32" resid="FlattenAll.32" />
+                    <bt:Image size="40" resid="FlattenAll.40" />
+                    <bt:Image size="48" resid="FlattenAll.48" />
+                    <bt:Image size="64" resid="FlattenAll.64" />
+                    <bt:Image size="80" resid="FlattenAll.80" />
                   </Icon>
                   <Action xsi:type="ExecuteFunction">
-                    <FunctionName>MinifyAll</FunctionName>
+                    <FunctionName>FlattenAll</FunctionName>
                   </Action>
                 </Control>
               </Group>
@@ -189,22 +189,22 @@
 
     <Resources>
       <bt:Images>
-        <bt:Image id="Beautify.16" DefaultValue="https://localhost:3000/assets/beautify-16.png" />
-        <bt:Image id="Beautify.20" DefaultValue="https://localhost:3000/assets/beautify-20.png" />
-        <bt:Image id="Beautify.24" DefaultValue="https://localhost:3000/assets/beautify-24.png" />
-        <bt:Image id="Beautify.32" DefaultValue="https://localhost:3000/assets/beautify-32.png" />
-        <bt:Image id="Beautify.40" DefaultValue="https://localhost:3000/assets/beautify-40.png" />
-        <bt:Image id="Beautify.48" DefaultValue="https://localhost:3000/assets/beautify-48.png" />
-        <bt:Image id="Beautify.64" DefaultValue="https://localhost:3000/assets/beautify-64.png" />
-        <bt:Image id="Beautify.80" DefaultValue="https://localhost:3000/assets/beautify-80.png" />
-        <bt:Image id="Minify.16" DefaultValue="https://localhost:3000/assets/minify-16.png" />
-        <bt:Image id="Minify.20" DefaultValue="https://localhost:3000/assets/minify-20.png" />
-        <bt:Image id="Minify.24" DefaultValue="https://localhost:3000/assets/minify-24.png" />
-        <bt:Image id="Minify.32" DefaultValue="https://localhost:3000/assets/minify-32.png" />
-        <bt:Image id="Minify.40" DefaultValue="https://localhost:3000/assets/minify-40.png" />
-        <bt:Image id="Minify.48" DefaultValue="https://localhost:3000/assets/minify-48.png" />
-        <bt:Image id="Minify.64" DefaultValue="https://localhost:3000/assets/minify-64.png" />
-        <bt:Image id="Minify.80" DefaultValue="https://localhost:3000/assets/minify-80.png" />
+        <bt:Image id="Format.16" DefaultValue="https://localhost:3000/assets/format-16.png" />
+        <bt:Image id="Format.20" DefaultValue="https://localhost:3000/assets/format-20.png" />
+        <bt:Image id="Format.24" DefaultValue="https://localhost:3000/assets/format-24.png" />
+        <bt:Image id="Format.32" DefaultValue="https://localhost:3000/assets/format-32.png" />
+        <bt:Image id="Format.40" DefaultValue="https://localhost:3000/assets/format-40.png" />
+        <bt:Image id="Format.48" DefaultValue="https://localhost:3000/assets/format-48.png" />
+        <bt:Image id="Format.64" DefaultValue="https://localhost:3000/assets/format-64.png" />
+        <bt:Image id="Format.80" DefaultValue="https://localhost:3000/assets/format-80.png" />
+        <bt:Image id="Flatten.16" DefaultValue="https://localhost:3000/assets/flatten-16.png" />
+        <bt:Image id="Flatten.20" DefaultValue="https://localhost:3000/assets/flatten-20.png" />
+        <bt:Image id="Flatten.24" DefaultValue="https://localhost:3000/assets/flatten-24.png" />
+        <bt:Image id="Flatten.32" DefaultValue="https://localhost:3000/assets/flatten-32.png" />
+        <bt:Image id="Flatten.40" DefaultValue="https://localhost:3000/assets/flatten-40.png" />
+        <bt:Image id="Flatten.48" DefaultValue="https://localhost:3000/assets/flatten-48.png" />
+        <bt:Image id="Flatten.64" DefaultValue="https://localhost:3000/assets/flatten-64.png" />
+        <bt:Image id="Flatten.80" DefaultValue="https://localhost:3000/assets/flatten-80.png" />
         <bt:Image id="Options.16" DefaultValue="https://localhost:3000/assets/options-16.png" />
         <bt:Image id="Options.20" DefaultValue="https://localhost:3000/assets/options-20.png" />
         <bt:Image id="Options.24" DefaultValue="https://localhost:3000/assets/options-24.png" />
@@ -213,22 +213,22 @@
         <bt:Image id="Options.48" DefaultValue="https://localhost:3000/assets/options-48.png" />
         <bt:Image id="Options.64" DefaultValue="https://localhost:3000/assets/options-64.png" />
         <bt:Image id="Options.80" DefaultValue="https://localhost:3000/assets/options-80.png" />
-        <bt:Image id="BeautifyAll.16" DefaultValue="https://localhost:3000/assets/beautify-all-16.png" />
-        <bt:Image id="BeautifyAll.20" DefaultValue="https://localhost:3000/assets/beautify-all-20.png" />
-        <bt:Image id="BeautifyAll.24" DefaultValue="https://localhost:3000/assets/beautify-all-24.png" />
-        <bt:Image id="BeautifyAll.32" DefaultValue="https://localhost:3000/assets/beautify-all-32.png" />
-        <bt:Image id="BeautifyAll.40" DefaultValue="https://localhost:3000/assets/beautify-all-40.png" />
-        <bt:Image id="BeautifyAll.48" DefaultValue="https://localhost:3000/assets/beautify-all-48.png" />
-        <bt:Image id="BeautifyAll.64" DefaultValue="https://localhost:3000/assets/beautify-all-64.png" />
-        <bt:Image id="BeautifyAll.80" DefaultValue="https://localhost:3000/assets/beautify-all-80.png" />
-        <bt:Image id="MinifyAll.16" DefaultValue="https://localhost:3000/assets/minify-all-16.png" />
-        <bt:Image id="MinifyAll.20" DefaultValue="https://localhost:3000/assets/minify-all-20.png" />
-        <bt:Image id="MinifyAll.24" DefaultValue="https://localhost:3000/assets/minify-all-24.png" />
-        <bt:Image id="MinifyAll.32" DefaultValue="https://localhost:3000/assets/minify-all-32.png" />
-        <bt:Image id="MinifyAll.40" DefaultValue="https://localhost:3000/assets/minify-all-40.png" />
-        <bt:Image id="MinifyAll.48" DefaultValue="https://localhost:3000/assets/minify-all-48.png" />
-        <bt:Image id="MinifyAll.64" DefaultValue="https://localhost:3000/assets/minify-all-64.png" />
-        <bt:Image id="MinifyAll.80" DefaultValue="https://localhost:3000/assets/minify-all-80.png" />
+        <bt:Image id="FormatAll.16" DefaultValue="https://localhost:3000/assets/format-all-16.png" />
+        <bt:Image id="FormatAll.20" DefaultValue="https://localhost:3000/assets/format-all-20.png" />
+        <bt:Image id="FormatAll.24" DefaultValue="https://localhost:3000/assets/format-all-24.png" />
+        <bt:Image id="FormatAll.32" DefaultValue="https://localhost:3000/assets/format-all-32.png" />
+        <bt:Image id="FormatAll.40" DefaultValue="https://localhost:3000/assets/format-all-40.png" />
+        <bt:Image id="FormatAll.48" DefaultValue="https://localhost:3000/assets/format-all-48.png" />
+        <bt:Image id="FormatAll.64" DefaultValue="https://localhost:3000/assets/format-all-64.png" />
+        <bt:Image id="FormatAll.80" DefaultValue="https://localhost:3000/assets/format-all-80.png" />
+        <bt:Image id="FlattenAll.16" DefaultValue="https://localhost:3000/assets/flatten-all-16.png" />
+        <bt:Image id="FlattenAll.20" DefaultValue="https://localhost:3000/assets/flatten-all-20.png" />
+        <bt:Image id="FlattenAll.24" DefaultValue="https://localhost:3000/assets/flatten-all-24.png" />
+        <bt:Image id="FlattenAll.32" DefaultValue="https://localhost:3000/assets/flatten-all-32.png" />
+        <bt:Image id="FlattenAll.40" DefaultValue="https://localhost:3000/assets/flatten-all-40.png" />
+        <bt:Image id="FlattenAll.48" DefaultValue="https://localhost:3000/assets/flatten-all-48.png" />
+        <bt:Image id="FlattenAll.64" DefaultValue="https://localhost:3000/assets/flatten-all-64.png" />
+        <bt:Image id="FlattenAll.80" DefaultValue="https://localhost:3000/assets/flatten-all-80.png" />
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html" />
@@ -237,18 +237,18 @@
         <bt:String id="Tab.Label" DefaultValue="Formula Formatter" />
         <bt:String id="Group.Label" DefaultValue="Selected cell" />
         <bt:String id="Group2.Label" DefaultValue="Whole workbook" />
-        <bt:String id="Beautify.Label" DefaultValue="Beautify" />
-        <bt:String id="Minify.Label" DefaultValue="Minify" />
+        <bt:String id="Format.Label" DefaultValue="Format" />
+        <bt:String id="Flatten.Label" DefaultValue="Flatten" />
         <bt:String id="Options.Label" DefaultValue="Options" />
-        <bt:String id="BeautifyAll.Label" DefaultValue="Beautify All" />
-        <bt:String id="MinifyAll.Label" DefaultValue="Minify All" />
+        <bt:String id="FormatAll.Label" DefaultValue="Format All" />
+        <bt:String id="FlattenAll.Label" DefaultValue="Flatten All" />
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="Beautify.Desc" DefaultValue="Spread the formula in the selected cell(s) over indented lines. Default shortcut: Ctrl+Alt+Shift+B." />
-        <bt:String id="Minify.Desc" DefaultValue="Collapse the formula in the selected cell(s) to a single line. Default shortcut: Ctrl+Alt+Shift+M." />
+        <bt:String id="Format.Desc" DefaultValue="Spread the formula in the selected cell(s) over indented lines. Default shortcut: Ctrl+Alt+Shift+B." />
+        <bt:String id="Flatten.Desc" DefaultValue="Collapse the formula in the selected cell(s) to a single line. Default shortcut: Ctrl+Alt+Shift+M." />
         <bt:String id="Options.Desc" DefaultValue="Layout density, spacing, separator, keyboard shortcuts, and a formula editor with preview." />
-        <bt:String id="BeautifyAll.Desc" DefaultValue="Beautify every formula in all sheets of this workbook (with confirmation)." />
-        <bt:String id="MinifyAll.Desc" DefaultValue="Minify every formula in all sheets of this workbook (with confirmation)." />
+        <bt:String id="FormatAll.Desc" DefaultValue="Format every formula in all sheets of this workbook (with confirmation)." />
+        <bt:String id="FlattenAll.Desc" DefaultValue="Flatten every formula in all sheets of this workbook (with confirmation)." />
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
