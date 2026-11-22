@@ -7,6 +7,7 @@
   <meta name="description" content="Paste an Excel formula and get it back formatted over indented lines, or flattened to one line. Runs in your browser." />
   <link rel="icon" href="assets/logo-32.png" />
   <link rel="stylesheet" href="style.css" />
+  <script src="theme.js"></script>
   <style>
     main { max-width: 1040px; }
     .lead a { white-space: nowrap; }
@@ -33,7 +34,7 @@
     .seg label { position: relative; }
     .seg input { position: absolute; opacity: 0; pointer-events: none; }
     .seg span { display: block; padding: 7px 16px; font-weight: 600; cursor: pointer; }
-    .seg input:checked + span { background: var(--accent); color: #fff; }
+    .seg input:checked + span { background: var(--accent); color: var(--on-accent); }
     .seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
     .check { flex-direction: row; align-items: center; gap: 8px; }
     .check input { width: 16px; height: 16px; accent-color: var(--accent); }
@@ -41,10 +42,10 @@
     button.small { font: inherit; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 6px; cursor: pointer;
       border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
     button.small:hover { border-color: var(--accent); }
-    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
     .status { font-size: 14px; color: var(--muted); min-height: 21px; margin: 0; }
     .status.ok { color: var(--accent); }
-    .status.err { color: #c4314b; }
+    .status.err { color: var(--err); }
     .tips { margin-top: 28px; }
     .tips li { margin-bottom: 6px; }
     @media (max-width: 760px) {

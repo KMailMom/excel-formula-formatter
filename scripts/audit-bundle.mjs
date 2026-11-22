@@ -11,7 +11,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const dist = new URL("../dist/", import.meta.url).pathname;
-const runtimeFiles = ["taskpane.html", "taskpane.js", "dialog.html", "online.html", "web.js"];
+const runtimeFiles = ["taskpane.html", "taskpane.js", "dialog.html", "online.html", "web.js", "theme.js"];
 
 const forbiddenApis = [
   /\bfetch\s*\(/,
