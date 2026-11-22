@@ -1,0 +1,10 @@
+{
+  "actions": [
+    { "id": "Format", "type": "ExecuteFunction", "name": "Format formula in selected cell" },
+    { "id": "Flatten", "type": "ExecuteFunction", "name": "Flatten formula in selected cell" }
+  ],
+  "shortcuts": [
+    { "action": "Format", "key": { "default": "Ctrl+Alt+Shift+B" } },
+    { "action": "Flatten", "key": { "default": "Ctrl+Alt+Shift+M" } }
+  ]
+}

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+
+  <Id>117076a0-2ea1-4038-be03-5425e8b2a84a</Id>
+  <Version>1.3.0.0</Version>
+  <ProviderName>Formula Formatter contributors</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Formula Formatter for Excel" />
+  <Description DefaultValue="Format or flatten the formula in the selected cell at the click of a button." />
+  <IconUrl DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/logo-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/logo-64.png" />
+  <SupportUrl DefaultValue="https://kmailmom.github.io/excel-formula-formatter/support.html" />
+
+  <Hosts>
+    <Host Name="Workbook" />
+  </Hosts>
+
+  <Requirements>
+    <Sets DefaultMinVersion="1.1">
+      <Set Name="ExcelApi" MinVersion="1.7" />
+      <Set Name="SharedRuntime" MinVersion="1.1" />
+    </Sets>
+  </Requirements>
+
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://kmailmom.github.io/excel-formula-formatter/taskpane.html" />
+  </DefaultSettings>
+
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.1">
+        <bt:Set Name="AddinCommands" MinVersion="1.1" />
+      </bt:Sets>
+    </Requirements>
+
+    <Hosts>
+      <Host xsi:type="Workbook">
+        <!-- One shared runtime (taskpane.html) runs the task pane, the ribbon buttons
+             and the keyboard shortcuts. Required for keyboard shortcuts. -->
+        <Runtimes>
+          <Runtime resid="Taskpane.Url" lifetime="long" />
+        </Runtimes>
+        <DesktopFormFactor>
+          <!-- Function file backing the ExecuteFunction ribbon buttons. -->
+          <FunctionFile resid="Taskpane.Url" />
+
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <CustomTab id="EFF.Tab">
+              <Group id="EFF.Group1">
+                <Label resid="Group.Label" />
+                <Icon>
+                  <bt:Image size="16" resid="Format.16" />
+                  <bt:Image size="32" resid="Format.32" />
+                  <bt:Image size="80" resid="Format.80" />
+                </Icon>
+
+                <!-- Format (one-click function command) -->
+                <Control xsi:type="Button" id="EFF.Format">
+                  <Label resid="Format.Label" />
+                  <Supertip>
+                    <Title resid="Format.Label" />
+                    <Description resid="Format.Desc" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Format.16" />
+                    <bt:Image size="20" resid="Format.20" />
+                    <bt:Image size="24" resid="Format.24" />
+                    <bt:Image size="32" resid="Format.32" />
+                    <bt:Image size="40" resid="Format.40" />
+                    <bt:Image size="48" resid="Format.48" />
+                    <bt:Image size="64" resid="Format.64" />
+                    <bt:Image size="80" resid="Format.80" />
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>Format</FunctionName>
+                  </Action>
+                </Control>
+
+                <!-- Flatten (one-click function command) -->
+                <Control xsi:type="Button" id="EFF.Flatten">
+                  <Label resid="Flatten.Label" />
+                  <Supertip>
+                    <Title resid="Flatten.Label" />
+                    <Description resid="Flatten.Desc" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Flatten.16" />
+                    <bt:Image size="20" resid="Flatten.20" />
+                    <bt:Image size="24" resid="Flatten.24" />
+                    <bt:Image size="32" resid="Flatten.32" />
+                    <bt:Image size="40" resid="Flatten.40" />
+                    <bt:Image size="48" resid="Flatten.48" />
+                    <bt:Image size="64" resid="Flatten.64" />
+                    <bt:Image size="80" resid="Flatten.80" />
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>Flatten</FunctionName>
+                  </Action>
+                </Control>
+
+                <!-- Options (opens the task pane) -->
+                <Control xsi:type="Button" id="EFF.Options">
+                  <Label resid="Options.Label" />
+                  <Supertip>
+                    <Title resid="Options.Label" />
+                    <Description resid="Options.Desc" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Options.16" />
+                    <bt:Image size="20" resid="Options.20" />
+                    <bt:Image size="24" resid="Options.24" />
+                    <bt:Image size="32" resid="Options.32" />
+                    <bt:Image size="40" resid="Options.40" />
+                    <bt:Image size="48" resid="Options.48" />
+                    <bt:Image size="64" resid="Options.64" />
+                    <bt:Image size="80" resid="Options.80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Taskpane.Url" />
+                  </Action>
+                </Control>
+              </Group>
+
+              <Group id="EFF.Group2">
+                <Label resid="Group2.Label" />
+                <Icon>
+                  <bt:Image size="16" resid="FormatAll.16" />
+                  <bt:Image size="32" resid="FormatAll.32" />
+                  <bt:Image size="80" resid="FormatAll.80" />
+                </Icon>
+
+                <!-- Format All (whole workbook) -->
+                <Control xsi:type="Button" id="EFF.FormatAll">
+                  <Label resid="FormatAll.Label" />
+                  <Supertip>
+                    <Title resid="FormatAll.Label" />
+                    <Description resid="FormatAll.Desc" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="FormatAll.16" />
+                    <bt:Image size="20" resid="FormatAll.20" />
+                    <bt:Image size="24" resid="FormatAll.24" />
+                    <bt:Image size="32" resid="FormatAll.32" />
+                    <bt:Image size="40" resid="FormatAll.40" />
+                    <bt:Image size="48" resid="FormatAll.48" />
+                    <bt:Image size="64" resid="FormatAll.64" />
+                    <bt:Image size="80" resid="FormatAll.80" />
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>FormatAll</FunctionName>
+                  </Action>
+                </Control>
+
+                <!-- Flatten All (whole workbook) -->
+                <Control xsi:type="Button" id="EFF.FlattenAll">
+                  <Label resid="FlattenAll.Label" />
+                  <Supertip>
+                    <Title resid="FlattenAll.Label" />
+                    <Description resid="FlattenAll.Desc" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="FlattenAll.16" />
+                    <bt:Image size="20" resid="FlattenAll.20" />
+                    <bt:Image size="24" resid="FlattenAll.24" />
+                    <bt:Image size="32" resid="FlattenAll.32" />
+                    <bt:Image size="40" resid="FlattenAll.40" />
+                    <bt:Image size="48" resid="FlattenAll.48" />
+                    <bt:Image size="64" resid="FlattenAll.64" />
+                    <bt:Image size="80" resid="FlattenAll.80" />
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>FlattenAll</FunctionName>
+                  </Action>
+                </Control>
+              </Group>
+              <Label resid="Tab.Label" />
+            </CustomTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Format.16" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-16.png" />
+        <bt:Image id="Format.20" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-20.png" />
+        <bt:Image id="Format.24" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-24.png" />
+        <bt:Image id="Format.32" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-32.png" />
+        <bt:Image id="Format.40" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-40.png" />
+        <bt:Image id="Format.48" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-48.png" />
+        <bt:Image id="Format.64" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-64.png" />
+        <bt:Image id="Format.80" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-80.png" />
+        <bt:Image id="Flatten.16" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-16.png" />
+        <bt:Image id="Flatten.20" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-20.png" />
+        <bt:Image id="Flatten.24" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-24.png" />
+        <bt:Image id="Flatten.32" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-32.png" />
+        <bt:Image id="Flatten.40" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-40.png" />
+        <bt:Image id="Flatten.48" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-48.png" />
+        <bt:Image id="Flatten.64" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-64.png" />
+        <bt:Image id="Flatten.80" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-80.png" />
+        <bt:Image id="Options.16" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/options-16.png" />
+        <bt:Image id="Options.20" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/options-20.png" />
+        <bt:Image id="Options.24" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/options-24.png" />
+        <bt:Image id="Options.32" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/options-32.png" />
+        <bt:Image id="Options.40" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/options-40.png" />
+        <bt:Image id="Options.48" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/options-48.png" />
+        <bt:Image id="Options.64" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/options-64.png" />
+        <bt:Image id="Options.80" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/options-80.png" />
+        <bt:Image id="FormatAll.16" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-all-16.png" />
+        <bt:Image id="FormatAll.20" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-all-20.png" />
+        <bt:Image id="FormatAll.24" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-all-24.png" />
+        <bt:Image id="FormatAll.32" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-all-32.png" />
+        <bt:Image id="FormatAll.40" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-all-40.png" />
+        <bt:Image id="FormatAll.48" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-all-48.png" />
+        <bt:Image id="FormatAll.64" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-all-64.png" />
+        <bt:Image id="FormatAll.80" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/format-all-80.png" />
+        <bt:Image id="FlattenAll.16" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-all-16.png" />
+        <bt:Image id="FlattenAll.20" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-all-20.png" />
+        <bt:Image id="FlattenAll.24" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-all-24.png" />
+        <bt:Image id="FlattenAll.32" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-all-32.png" />
+        <bt:Image id="FlattenAll.40" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-all-40.png" />
+        <bt:Image id="FlattenAll.48" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-all-48.png" />
+        <bt:Image id="FlattenAll.64" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-all-64.png" />
+        <bt:Image id="FlattenAll.80" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/assets/flatten-all-80.png" />
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://kmailmom.github.io/excel-formula-formatter/taskpane.html" />
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="Tab.Label" DefaultValue="Formula Formatter" />
+        <bt:String id="Group.Label" DefaultValue="Selected cell" />
+        <bt:String id="Group2.Label" DefaultValue="Whole workbook" />
+        <bt:String id="Format.Label" DefaultValue="Format" />
+        <bt:String id="Flatten.Label" DefaultValue="Flatten" />
+        <bt:String id="Options.Label" DefaultValue="Options" />
+        <bt:String id="FormatAll.Label" DefaultValue="Format All" />
+        <bt:String id="FlattenAll.Label" DefaultValue="Flatten All" />
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="Format.Desc" DefaultValue="Spread the formula in the selected cell(s) over indented lines. Default shortcut: Ctrl+Alt+Shift+B." />
+        <bt:String id="Flatten.Desc" DefaultValue="Collapse the formula in the selected cell(s) to a single line. Default shortcut: Ctrl+Alt+Shift+M." />
+        <bt:String id="Options.Desc" DefaultValue="Layout density, spacing, separator, keyboard shortcuts, and a formula editor with preview." />
+        <bt:String id="FormatAll.Desc" DefaultValue="Format every formula in all sheets of this workbook (with confirmation)." />
+        <bt:String id="FlattenAll.Desc" DefaultValue="Flatten every formula in all sheets of this workbook (with confirmation)." />
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+  <!-- Keyboard shortcuts (requires the shared runtime above). -->
+  <ExtendedOverrides Url="https://kmailmom.github.io/excel-formula-formatter/shortcuts.json" />
+</OfficeApp>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Formula Formatter for Excel</title>
+  <link rel="icon" href="assets/logo-32.png" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="theme.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <img src="assets/logo-64.png" alt="" />
+    <div>
+      <h1>Formula Formatter for Excel</h1>
+      <p class="lead">Format or flatten Excel formulas from the ribbon or with a keyboard shortcut. Free and open source (MIT).</p>
+    </div>
+  </header>
+
+  <img class="shot" src="images/format-flatten.png" alt="Formula Formatter ribbon tab, and a formula before and after formatting" />
+
+  <div class="card">
+    <h3>Just need to format one formula?</h3>
+    <p>Use <a href="online.html"><strong>Formula Formatter Online</strong></a>: paste a formula, get it back formatted or flattened. Nothing to install, and it runs entirely in your browser.</p>
+  </div>
+
+  <h2>Install</h2>
+  <p>This add-in is not in Microsoft's add-in store. You install it yourself ("sideloading"), which takes about a minute.
+    Pick your platform. Each option shows exactly what it changes on your computer.</p>
+
+  <div class="card">
+    <h3>Windows (Excel for Microsoft 365)</h3>
+    <p><strong>Option A: download and double-click.</strong></p>
+    <ol>
+      <li>Download <a href="install.cmd" download>install.cmd</a>. If your browser asks, choose <em>Keep</em>.</li>
+      <li>Double-click it. If Windows shows "Windows protected your PC", click <em>More info</em> &gt; <em>Run anyway</em>.
+        That warning appears for any downloaded file that isn't signed by a paid certificate.</li>
+      <li>Close all Excel windows and start Excel again. A <strong>Formula Formatter</strong> tab appears on the ribbon.</li>
+    </ol>
+    <p class="small">Want to see what it does first? Right-click the file &gt; <em>Edit</em> (or open it in Notepad). It is a short, readable script, not a program.</p>
+
+    <p><strong>Option B: one line in PowerShell.</strong> Open <strong>PowerShell</strong> (Start menu, type "PowerShell"), paste this and press Enter:</p>
+    <pre><code>irm https://kmailmom.github.io/excel-formula-formatter/install.ps1 | iex</code></pre>
+
+    <p class="small"><strong>What the script changes:</strong> it saves <code>manifest.xml</code> to
+      <code>%LOCALAPPDATA%\ExcelFormulaFormatter\</code> and adds one value under
+      <code>HKCU\Software\Microsoft\Office\16.0\Wef\Developer</code> pointing to that file. That's all.
+      It does not install programs, does not need admin rights and does not touch other settings.</p>
+    <p class="small"><strong>Uninstall:</strong> download and double-click <a href="uninstall.cmd" download>uninstall.cmd</a>,
+      or run <code>irm https://kmailmom.github.io/excel-formula-formatter/uninstall.ps1 | iex</code>. It removes exactly those two things.</p>
+  </div>
+
+  <div class="card">
+    <h3>Mac (Excel for Microsoft 365)</h3>
+    <p><strong>Option A: one line.</strong> Open <strong>Terminal</strong>, paste this and press Enter:</p>
+    <pre><code>curl -fsSL https://kmailmom.github.io/excel-formula-formatter/install-mac.sh | sh</code></pre>
+    <p><strong>Option B: by hand.</strong> Download <a href="manifest.xml" download="excel-formula-formatter.xml">the manifest</a> and copy it into
+      <code>~/Library/Containers/com.microsoft.Excel/Data/Documents/wef/</code> (create the <code>wef</code> folder if it doesn't exist).</p>
+    <p>Quit Excel (Cmd+Q) and start it again. If the tab doesn't appear: <strong>Home</strong> &gt; <strong>Add-ins</strong>, then pick the add-in under <em>Developer Add-ins</em>.</p>
+    <p class="small"><strong>Uninstall:</strong> delete <code>excel-formula-formatter.xml</code> from that <code>wef</code> folder.</p>
+  </div>
+
+  <div class="card">
+    <h3>Excel on the web</h3>
+    <ol>
+      <li><a href="manifest.xml" download="excel-formula-formatter.xml">Download the manifest file</a>.</li>
+      <li>In Excel on the web: <strong>Home</strong> &gt; <strong>Add-ins</strong> &gt; <strong>More Add-ins</strong> &gt;
+        <strong>My Add-ins</strong> &gt; <strong>Upload My Add-in</strong>, and pick the file.</li>
+    </ol>
+    <p class="small">Menu names differ slightly between Excel versions.</p>
+  </div>
+
+  <div class="card">
+    <h3>Organisations (Microsoft 365 admins)</h3>
+    <p>Deploy to users or groups from the Microsoft 365 admin center: <strong>Settings</strong> &gt; <strong>Integrated apps</strong> &gt;
+      <strong>Upload custom apps</strong>, using this manifest URL:</p>
+    <pre><code>https://kmailmom.github.io/excel-formula-formatter/manifest.xml</code></pre>
+  </div>
+
+  <h2>Layout density</h2>
+  <p>Choose how compact the formatted formula is, from Expanded to Dense, under <strong>Options</strong>.</p>
+  <img class="shot" src="images/density-levels.png" alt="The same formula at three layout densities" />
+
+  <h2>Is this safe?</h2>
+  <p>You should ask that about anything you install. You don't have to take our word for it; here's what you can check.</p>
+  <ul>
+    <li><strong>No network traffic.</strong> Your formulas are processed inside Excel and never sent anywhere. The add-in contains no
+      analytics, tracking or cookies. The only external file it loads is Microsoft's own Office.js library.</li>
+    <li><strong>Checked on every release.</strong> Before every deploy, an automated check fails the build if the add-in's code uses any
+      browser function that can send data (<code>fetch</code>, <code>XMLHttpRequest</code>, <code>WebSocket</code>, and so on) or
+      references any other website.</li>
+    <li><strong>Built in public.</strong> This site is built from the public source code by GitHub Actions. Every build log is public, and
+      the unminified source is published alongside the code (<code>taskpane.js.map</code>).</li>
+    <li><strong>Limited access.</strong> Excel only allows the add-in to read and write the open workbook. It runs in Excel's sandbox,
+      like a web page, and cannot access your files or other programs.</li>
+    <li><strong>Short, readable installers.</strong> The installers are plain-text scripts of a few dozen lines, not compiled programs, so anyone can read exactly what they do. They change only what's listed above.</li>
+  </ul>
+  <p>Details: <a href="https://github.com/KMailMom/excel-formula-formatter/blob/main/SECURITY.md">SECURITY.md</a> · <a href="privacy.html">privacy policy</a>.</p>
+
+  <h2>Updates</h2>
+  <p>Excel loads the add-in from this site, so updates arrive automatically. Re-run the installer only when the release notes say so
+    (for example when ribbon buttons change).</p>
+
+  <footer><a href="online.html">Use online</a> · 
+    <a href="https://github.com/KMailMom/excel-formula-formatter">Source on GitHub</a> ·
+    <a href="support.html">Support</a> ·
+    <a href="privacy.html">Privacy</a> · MIT licensed
+  </footer>
+</main>
+</body>
+</html>
