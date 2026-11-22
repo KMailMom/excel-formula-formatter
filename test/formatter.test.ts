@@ -14,7 +14,7 @@ function test(name: string, fn: () => void): void {
 }
 
 const USER =
-  '=IF([@Soort]<>"Nevenwerkzaamheid","",LET(k,[@Werknr]&"|"&LEFT(LOWER(TRIM([@Opdrachtgever]&"")),80)&"|"&N([@[Termijn van]])&"|"&N([@Tot])&"|"&LEFT(LOWER(TRIM([@Omschrijving]&"")),80),k))';
+  '=IF([@Type]<>"Project","",LET(k,[@ID]&"|"&LEFT(LOWER(TRIM([@Customer]&"")),80)&"|"&N([@[Start Date]])&"|"&N([@End])&"|"&LEFT(LOWER(TRIM([@Description]&"")),80),k))';
 const indent = { useSpaces: true, size: 4 };
 const spacing = { afterSeparator: false, insideParens: false };
 
@@ -22,7 +22,7 @@ test("minify keeps spaces inside structured references", () => {
   const b = beautifyFormula(USER, { inlineWidth: 0, indent, spacing });
   assert.ok(b.ok, b.reason);
   assert.strictEqual(minifyFormula(b.value), USER);
-  assert.ok(minifyFormula(b.value).includes("[@[Termijn van]]"));
+  assert.ok(minifyFormula(b.value).includes("[@[Start Date]]"));
 });
 
 test("minify keeps spaces in strings, sheet names, [#This Row]", () => {
@@ -48,7 +48,7 @@ test("expanded mode breaks every call", () => {
 test("width mode keeps short calls on one line", () => {
   const b = beautifyFormula(USER, { inlineWidth: 25, indent, spacing });
   assert.ok(b.ok, b.reason);
-  assert.ok(b.value.includes("N([@[Termijn van]])"));
+  assert.ok(b.value.includes("N([@[Start Date]])"));
 });
 
 test("short formula stays on one line", () => {

@@ -1,0 +1,33 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options: [Excel on Windows, Excel on Mac, Excel on the web]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Excel version
+      description: File > Account > About Excel (for example "Version 2410, Build 18129.20116")
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install the add-in?
+      options: [install.cmd, PowerShell one-liner, Mac script, Uploaded manifest (web), Shared folder, Admin deployment, Other]
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: formula
+    attributes:
+      label: Formula (if relevant)
+      description: Paste the formula, with sensitive names replaced.
+      render: text

@@ -91,6 +91,7 @@ module.exports = async (env, options) => {
           { from: "shortcuts.json", to: "shortcuts.json" },
           // Landing, privacy and support pages, plus the one-line installers.
           { from: "site", to: ".", transform: fillPlaceholders },
+          { from: "docs/images", to: "images" },
           { from: "install", to: ".", transform: fillPlaceholders, globOptions: { ignore: ["**/cmd-wrapper.txt"] } },
           // Double-clickable Windows versions of the PowerShell scripts (same code, wrapped).
           { from: "install/install.ps1", to: "install.cmd", transform: (c) => toCmd(fillPlaceholders(c), "Formula Formatter for Excel - installer") },

@@ -25,7 +25,7 @@ export interface DensityLevel {
 
 export const DENSITY_LEVELS: DensityLevel[] = [
   { label: "Expanded", description: "Every function gets its own lines. Maximum structure, long output.", inlineWidth: 0 },
-  { label: "Spacious", description: "Very short calls such as N([@Tot]) stay on one line (up to 25 characters).", inlineWidth: 25 },
+  { label: "Spacious", description: "Very short calls such as N([@End]) stay on one line (up to 25 characters).", inlineWidth: 25 },
   { label: "Balanced", description: "Calls up to 50 characters stay on one line. Short formulas are not split.", inlineWidth: 50 },
   { label: "Compact", description: "Calls up to 80 characters stay on one line. Only long formulas are split.", inlineWidth: 80 },
   { label: "Dense", description: "Calls up to 120 characters stay on one line. Splits only very long formulas.", inlineWidth: 120 },

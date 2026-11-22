@@ -4,7 +4,7 @@
  *
  * Pipeline: tokenize -> parse into a small tree -> render.
  *  - The tokenizer is quote/bracket aware: string literals, quoted sheet names,
- *    structured references ([@[Termijn van]]) and array constants ({1,2;3,4}) are
+ *    structured references ([@[Start Date]]) and array constants ({1,2;3,4}) are
  *    kept verbatim, including any spaces inside them.
  *  - Beautify renders the tree with a width budget: a function call whose one-line
  *    form fits within `layout.inlineWidth` stays on one line, otherwise its arguments

@@ -9,7 +9,7 @@ import { loadSettings, saveSettings, toFormatOptions, Settings, DENSITY_LEVELS }
 import { DEFAULT_SHORTCUTS, ShortcutAction, shortcutsSupported, getShortcuts, setShortcuts, shortcutsInUse, comboFromEvent } from "../lib/shortcuts";
 
 const SAMPLE_FORMULA =
-  '=IF([@Soort]<>"Extra","",LET(k,[@Werknr]&"|"&LEFT(LOWER(TRIM([@Klant]&"")),80)&"|"&N([@[Termijn van]]),IF(k="","-",k)))';
+  '=IF([@Type]<>"Project","",LET(k,[@ID]&"|"&LEFT(LOWER(TRIM([@Customer]&"")),80)&"|"&N([@[Start Date]]),IF(k="","-",k)))';
 
 let settings: Settings;
 /** Separator detected from Excel's regional settings (used when the setting is "auto"). */

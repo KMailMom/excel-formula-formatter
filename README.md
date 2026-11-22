@@ -3,6 +3,10 @@
 An Excel add-in that beautifies or minifies the formula in the selected cell, from the
 ribbon or with a keyboard shortcut.
 
+**[Install page](https://kmailmom.github.io/excel-formula-formatter/)** · free and open source (MIT)
+
+![Formula Formatter ribbon tab, and a formula before and after Beautify](docs/images/beautify-minify.png)
+
 The ribbon adds a **Formula Formatter** tab with two groups:
 
 - **Selected cell**
@@ -22,6 +26,8 @@ The ribbon adds a **Formula Formatter** tab with two groups:
 Your formula data never leaves your PC. The add-in code is static; it reads and writes
 cells locally through the Excel JavaScript API.
 
+![The same formula at three layout densities](docs/images/density-levels.png)
+
 ## How it works
 
 Excel treats whitespace and newlines *between tokens* in a formula as insignificant
@@ -32,7 +38,7 @@ separator (for example a Dutch `;`). The separator setting only affects how form
 are shown in the task pane.
 
 - The formatter (`src/lib/formatter.ts`) tokenizes the formula, keeping string
-  literals, quoted sheet names, structured references such as `[@[Termijn van]]` and
+  literals, quoted sheet names, structured references such as `[@[Start Date]]` and
   array constants verbatim, builds a small tree, and renders it. With a density other
   than Expanded, a function call whose one-line form fits the width limit stays on one
   line.
