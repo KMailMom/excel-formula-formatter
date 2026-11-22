@@ -1,0 +1,10 @@
+{
+  "actions": [
+    { "id": "Beautify", "type": "ExecuteFunction", "name": "Beautify formula in selected cell" },
+    { "id": "Minify", "type": "ExecuteFunction", "name": "Minify formula in selected cell" }
+  ],
+  "shortcuts": [
+    { "action": "Beautify", "key": { "default": "Ctrl+Alt+Shift+B" } },
+    { "action": "Minify", "key": { "default": "Ctrl+Alt+Shift+M" } }
+  ]
+}

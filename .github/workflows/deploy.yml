@@ -1,0 +1,41 @@
+# Builds the add-in and publishes dist/ to the gh-pages branch (GitHub Pages source).
+# Runs on every push to main, so the hosted add-in, landing page and installers stay current.
+name: Build and deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      # Fails the deploy if the add-in code can send data anywhere.
+      - run: npm run audit:network
+      # Uses a Microsoft web service; do not block the deploy if that service is down.
+      - run: npx office-addin-manifest validate dist/manifest.xml
+        continue-on-error: true
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          # Keep gh-pages as a single commit; its history has no value.
+          force_orphan: true

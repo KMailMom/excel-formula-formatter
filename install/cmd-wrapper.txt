@@ -1,0 +1,12 @@
+@echo off
+rem __TITLE__
+rem Double-click this file to run it. It runs the PowerShell script below this header,
+rem for the current user only. No admin rights needed. Open it in Notepad to read it first.
+setlocal
+set "EFF_SELF=%~f0"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$s = Get-Content -Raw -LiteralPath $env:EFF_SELF; $m = '#' + '#POWERSHELL' + '#' + '#'; Invoke-Expression ($s.Substring($s.IndexOf($m) + $m.Length))"
+echo.
+pause
+exit /b
+##POWERSHELL##
+__PS_SCRIPT__
